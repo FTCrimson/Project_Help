@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Project Helper</string>
+    <string name="Log_in">Log In</string>
+    <string name="Log_in_help">Login to account</string>
+    <string name="Log_in_button">Continue</string>
+    <string name="Register">Register</string>
+    <string name="Terms_of_service">By clicking continue, you agree to our Terms of Service and Privacy Policy</string>
+    <string name="Forgot_password">Forgot password?</string>
+    <string name="Create_account">Create an account</string>
+    <string name="Register_help">Enter your email, password and login to sign up for this app</string>
+    <string name="Sign_in">Sign In</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
