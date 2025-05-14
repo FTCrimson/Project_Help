@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Project Helper</string>
-    <string name="Log_in">Log In</string>
-    <string name="Log_in_help">Login to account</string>
+    <string name="Log_in">Login to account</string>
+    <string name="Log_in_help">Enter your email and password to sign in for this app</string>
     <string name="Log_in_button">Continue</string>
     <string name="Register">Register</string>
     <string name="Terms_of_service">By clicking continue, you agree to our Terms of Service and Privacy Policy</string>

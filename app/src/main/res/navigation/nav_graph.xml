@@ -36,5 +36,14 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.project_helper.features.profile.ProfileFragment"
-        android:label="Profile" />
+        android:label="Profile">
+
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
 </navigation>

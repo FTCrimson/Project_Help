@@ -1,60 +1,112 @@
 package com.example.project_helper.features.profile
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.project_helper.R
+import com.example.project_helper.databinding.FragmentProfileBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
+import data.auth.UserData
+import data.auth.formatToString
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+    ): View {
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+
+        val currentUser: FirebaseUser? = firebaseAuth.currentUser
+
+        if (currentUser != null) {
+            val userId = currentUser.uid
+            Log.d("ProfileFragment", "Текущий пользователь UID: $userId")
+
+            loadUserProfile(userId)
+
+            binding.tvEmail.text = currentUser.email ?: "Email недоступен"
+            binding.tvPassword.setText("********")
+            binding.tvPassword.isEnabled = false
+
+            binding.btnLogout.setOnClickListener {
+                firebaseAuth.signOut()
+                Log.d("ProfileFragment", "Пользователь вышел из аккаунта")
+                Toast.makeText(requireContext(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.loginFragment)
+            }
+
+        } else {
+            Log.d("ProfileFragment", "Пользователь не вошел.")
+            Toast.makeText(requireContext(), "Пожалуйста, войдите в аккаунт для просмотра профиля", Toast.LENGTH_LONG).show()
+
+            binding.tvUsername.text = ""
+            binding.tvEmail.text = ""
+            binding.tvRegistrationDate.text = ""
+            binding.tvPassword.setText("")
+            binding.btnLogout.isEnabled = false
+        }
+    }
+
+    private fun loadUserProfile(userId: String) {
+        firestore.collection("users").document(userId)
+            .get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val user = documentSnapshot.toObject(UserData::class.java)
+                    if (user != null) {
+                        Log.d("ProfileFragment", "Данные пользователя загружены: $user")
+
+                        binding.tvUsername.text = user.username ?: "Имя пользователя не указано"
+
+                        binding.tvRegistrationDate.text = user.registrationDate.formatToString()
+
+                    } else {
+                        Log.e("ProfileFragment", "Не удалось преобразовать данные документа Firestore в UserData")
+                        Toast.makeText(requireContext(), "Ошибка загрузки данных профиля.", Toast.LENGTH_SHORT).show()
+                        binding.tvUsername.text = "Ошибка данных"
+                        binding.tvRegistrationDate.text = "Ошибка данных"
+                    }
+                } else {
+                    Log.d("ProfileFragment", "Документ пользователя с UID $userId не найден в Firestore.")
+                    Toast.makeText(requireContext(), "Данные профиля не найдены.", Toast.LENGTH_SHORT).show()
+                    binding.tvUsername.text = "Данные не найдены"
+                    binding.tvRegistrationDate.text = "Данные не найдены"
                 }
             }
+            .addOnFailureListener { exception ->
+                Log.e("ProfileFragment", "Ошибка загрузки данных пользователя из Firestore: ${exception.message}", exception)
+                Toast.makeText(requireContext(), "Ошибка загрузки профиля: ${exception.message}", Toast.LENGTH_LONG).show()
+
+                binding.tvUsername.text = "Ошибка загрузки"
+                binding.tvRegistrationDate.text = "Ошибка загрузки"
+            }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
