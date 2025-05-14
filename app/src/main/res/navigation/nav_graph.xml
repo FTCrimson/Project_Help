@@ -44,6 +44,19 @@
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
 
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.project_helper.features.profile.EditProfileFragment"
+        android:label="Edit Profile">
+
+        <action
+            android:id="@+id/action_editProfileFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 
 </navigation>

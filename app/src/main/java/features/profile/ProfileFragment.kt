@@ -1,13 +1,14 @@
+// ProfileFragment.kt
 package com.example.project_helper.features.profile
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.project_helper.R
 import com.example.project_helper.databinding.FragmentProfileBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -15,7 +16,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import data.auth.UserData
 import data.auth.formatToString
-
 
 class ProfileFragment : Fragment() {
 
@@ -43,30 +43,20 @@ class ProfileFragment : Fragment() {
 
         if (currentUser != null) {
             val userId = currentUser.uid
-            Log.d("ProfileFragment", "Текущий пользователь UID: $userId")
-
             loadUserProfile(userId)
 
-            binding.tvEmail.text = currentUser.email ?: "Email недоступен"
-            binding.tvPassword.setText("********")
-            binding.tvPassword.isEnabled = false
+            binding.btnEdit.setOnClickListener {
+                findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
+            }
 
             binding.btnLogout.setOnClickListener {
                 firebaseAuth.signOut()
-                Log.d("ProfileFragment", "Пользователь вышел из аккаунта")
                 Toast.makeText(requireContext(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.loginFragment)
+                findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
             }
-
         } else {
-            Log.d("ProfileFragment", "Пользователь не вошел.")
-            Toast.makeText(requireContext(), "Пожалуйста, войдите в аккаунт для просмотра профиля", Toast.LENGTH_LONG).show()
-
-            binding.tvUsername.text = ""
-            binding.tvEmail.text = ""
-            binding.tvRegistrationDate.text = ""
-            binding.tvPassword.setText("")
-            binding.btnLogout.isEnabled = false
+            Toast.makeText(requireContext(), "Пожалуйста, войдите в аккаунт", Toast.LENGTH_LONG).show()
+            findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
         }
     }
 
@@ -76,32 +66,26 @@ class ProfileFragment : Fragment() {
             .addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()) {
                     val user = documentSnapshot.toObject(UserData::class.java)
-                    if (user != null) {
-                        Log.d("ProfileFragment", "Данные пользователя загружены: $user")
+                    user?.let {
+                        binding.tvUsername.text = it.username ?: "Имя пользователя не указано"
+                        binding.tvEmail.text = it.email ?: "Email недоступен"
+                        binding.tvRegistrationDate.text = it.registrationDate.formatToString()
+                        binding.tvPhone.text = it.phone ?: "+7********"
 
-                        binding.tvUsername.text = user.username ?: "Имя пользователя не указано"
-
-                        binding.tvRegistrationDate.text = user.registrationDate.formatToString()
-
-                    } else {
-                        Log.e("ProfileFragment", "Не удалось преобразовать данные документа Firestore в UserData")
-                        Toast.makeText(requireContext(), "Ошибка загрузки данных профиля.", Toast.LENGTH_SHORT).show()
-                        binding.tvUsername.text = "Ошибка данных"
-                        binding.tvRegistrationDate.text = "Ошибка данных"
+                        // Загрузка аватарки
+                        Glide.with(this)
+                            .load(it.avatarUrl)
+                            .placeholder(R.drawable.ic_default_avatar)
+                            .into(binding.ivProfile)
                     }
-                } else {
-                    Log.d("ProfileFragment", "Документ пользователя с UID $userId не найден в Firestore.")
-                    Toast.makeText(requireContext(), "Данные профиля не найдены.", Toast.LENGTH_SHORT).show()
-                    binding.tvUsername.text = "Данные не найдены"
-                    binding.tvRegistrationDate.text = "Данные не найдены"
                 }
             }
             .addOnFailureListener { exception ->
-                Log.e("ProfileFragment", "Ошибка загрузки данных пользователя из Firestore: ${exception.message}", exception)
-                Toast.makeText(requireContext(), "Ошибка загрузки профиля: ${exception.message}", Toast.LENGTH_LONG).show()
-
-                binding.tvUsername.text = "Ошибка загрузки"
-                binding.tvRegistrationDate.text = "Ошибка загрузки"
+                Toast.makeText(
+                    requireContext(),
+                    "Ошибка загрузки профиля: ${exception.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
     }
 

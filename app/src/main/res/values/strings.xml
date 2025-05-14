@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Project Helper</string>
     <string name="Log_in">Login to account</string>
+    <string name="Edit">Edit Account</string>
     <string name="Log_in_help">Enter your email and password to sign in for this app</string>
     <string name="Log_in_button">Continue</string>
     <string name="Register">Register</string>

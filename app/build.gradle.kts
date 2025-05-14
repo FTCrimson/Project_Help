@@ -67,6 +67,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
+    // Glide (для загрузки изображений)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.firebase.storage.ktx) // Основная библиотека Glide
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0") // Аннотационный процессор Glide
+
     // Тестирование
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

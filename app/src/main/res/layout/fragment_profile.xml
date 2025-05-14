@@ -37,6 +37,17 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
+                <!-- Добавлена ImageView для аватара -->
+                <ImageView
+                    android:id="@+id/iv_profile"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="16dp"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/ic_default_avatar" />
+                <!-- Конец добавленной ImageView -->
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -86,29 +97,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginBottom="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Пароль"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"/>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:endIconMode="password_toggle"
-                        app:endIconTint="@color/black">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tv_password"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPassword"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            android:enabled="false"/>
-                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -131,6 +119,27 @@
                         android:textColor="@color/black"
                         android:layout_marginTop="4dp"/>
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Телефон"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/tv_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -140,6 +149,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Выйти"
+            app:cornerRadius="8dp"
+            app:iconGravity="start"
+            app:iconTint="@color/white"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/Edit"
             app:cornerRadius="8dp"
             app:iconGravity="start"
             app:iconTint="@color/white"/>
