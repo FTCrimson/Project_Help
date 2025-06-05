@@ -1,14 +1,18 @@
 package com.example.project_helper.features.auth.fragments
 
 import android.os.Bundle
+import com.example.project_helper.features.neurochat.MessageAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.project_helper.data.api.deepseek.DeepSeekApiClient
+import com.example.project_helper.data.api.deepseek.Message
+import com.example.project_helper.data.auth.RoleSelection
 import com.example.project_helper.databinding.FragmentNeuroChatBinding
 import io.noties.markwon.Markwon
 import io.noties.markwon.html.HtmlPlugin
@@ -19,19 +23,23 @@ import kotlinx.coroutines.withContext
 import android.util.Log
 import android.widget.Toast
 import com.example.project_helper.data.auth.api.deepseek.ChatCompletionRequest
-import com.example.project_helper.data.auth.api.deepseek.Message as ApiMessage
-import com.example.project_helper.features.neurochat.MessageAdapter
-import com.example.project_helper.features.neurochat.MessageAdapter.DisplayMessage
+import features.fragments.ProfileViewModel
+import java.util.Date
 
 class NeuroChatFragment : Fragment() {
 
     private var _binding: FragmentNeuroChatBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var messageAdapter: MessageAdapter
-    private val messages = mutableListOf<DisplayMessage>()
+    private val messages = mutableListOf<Message>()
+    private val chatHistory = mutableListOf<Message>()
+
     private lateinit var markwon: Markwon
+    private lateinit var profileViewModel: ProfileViewModel
 
     private val DEEPSEEK_MODEL = "deepseek/deepseek-chat-v3-0324:free"
+
     private val TAG = "NeuroChatFragment"
 
     override fun onCreateView(
@@ -40,20 +48,19 @@ class NeuroChatFragment : Fragment() {
     ): View {
         _binding = FragmentNeuroChatBinding.inflate(inflater, container, false)
 
-        // Инициализация Markwon
         markwon = Markwon.builder(requireContext())
             .usePlugin(HtmlPlugin.create())
             .usePlugin(LinkifyPlugin.create())
             .build()
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Инициализация адаптера с Markwon
-        messageAdapter = MessageAdapter(markwon)
+        profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
+
+        messageAdapter = MessageAdapter(requireContext(), markwon)
         binding.chatRecyclerView.apply {
             layoutManager = LinearLayoutManager(context).apply {
                 stackFromEnd = true
@@ -61,12 +68,21 @@ class NeuroChatFragment : Fragment() {
             adapter = messageAdapter
         }
 
-        // Приветственное сообщение
-        if (messages.isEmpty()) {
-            addBotMessage("Привет! Я нейросеть, чем могу помочь?")
+        if (chatHistory.isEmpty()) {
+            val roleSelection = profileViewModel.getRoleSelection()
+            val systemPrompt = buildSystemPrompt(roleSelection)
+            chatHistory.add(Message(role = "system", content = systemPrompt, timestamp = Date().time))
+
+            sendInitialPrompt()
+        } else {
+            messages.addAll(chatHistory.filter { !it.isSystem })
+            updateMessageList()
         }
 
-        binding.sendButton.setOnClickListener { sendMessage() }
+        binding.sendButton.setOnClickListener {
+            sendMessage()
+        }
+
         binding.messageInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
                 sendMessage()
@@ -77,69 +93,127 @@ class NeuroChatFragment : Fragment() {
         }
     }
 
+    private fun sendInitialPrompt() {
+        val request = ChatCompletionRequest(
+            model = DEEPSEEK_MODEL,
+            messages = chatHistory.toList(),
+            stream = false
+        )
+
+        showTypingIndicator(true)
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val response = DeepSeekApiClient.apiService.createChatCompletion(request)
+                Log.d(TAG, "Initial API Response received: $response")
+
+                withContext(Dispatchers.Main) {
+                    showTypingIndicator(false)
+
+                    val botMessageContent = response.choices.firstOrNull()?.message?.content
+                    val botMessageRole = response.choices.firstOrNull()?.message?.role
+
+                    if (botMessageRole == "assistant" && !botMessageContent.isNullOrBlank()) {
+                        val botMessage = Message(role = "assistant", content = botMessageContent, timestamp = Date().time)
+                        messages.add(botMessage)
+                        chatHistory.add(botMessage)
+                        updateMessageList()
+                    } else {
+                        val errorDetail = response.choices.firstOrNull()?.finishReason ?: "No content"
+                        Toast.makeText(requireContext(), "Не удалось получить первое сообщение от нейросети: $errorDetail", Toast.LENGTH_LONG).show()
+                        Log.e(TAG, "Initial API response had incorrect role or empty content. Role: $botMessageRole, Content: $botMessageContent")
+                    }
+                }
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Error sending initial prompt to API", e)
+                withContext(Dispatchers.Main) {
+                    showTypingIndicator(false)
+                    val errorMessage = "Ошибка при отправке начального промпта: ${e.localizedMessage ?: e.message ?: "Неизвестная ошибка"}"
+                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun buildSystemPrompt(roleSelection: RoleSelection?): String {
+        val userInfo = when (roleSelection?.roleType) {
+            "student" -> "Ученик (${roleSelection.role}) в сфере ${roleSelection.field}"
+            "expert" -> "Эксперт в области ${roleSelection.role}"
+            "mentor" -> "Наставник ученика ${roleSelection.studentName}"
+            else -> "Пользователь"
+        }
+
+        return """
+            Ты — дружелюбный и креативный помощник в проектной деятельности.
+            Твоя основная задача — помочь пользователю, который является $userInfo, создать или развить его проект.
+            Поприветствуй пользователя, представься как помощник по проектной деятельности и вежливо попроси его рассказать о проекте, над которым он работает или который хочет создать.
+            Когда пользователь опишет свой проект, внимательно проанализируй предоставленную информацию, учитывая его роль и сферу деятельности, которую он выбрал ранее.
+            На основе этой информации предложи пользователю конкретные и полезные идеи по развитию или созданию проекта.
+            Идеи должны быть релевантны проекту и учитывать контекст пользователя (его роль).
+            Будь поддерживающим и поощряй дальнейшее обсуждение.
+            Общайся на русском языке.
+            Твой первый ответ должен быть приветствием и вопросом о проекте.
+        """.trimIndent()
+    }
+
     private fun sendMessage() {
         val userText = binding.messageInput.text.toString().trim()
+
         if (userText.isEmpty()) {
             Toast.makeText(requireContext(), "Введите ваше сообщение", Toast.LENGTH_SHORT).show()
             return
         }
 
-        addUserMessage(userText)
+        val userMessage = Message(role = "user", content = userText, timestamp = Date().time)
+
+        messages.add(userMessage)
+        chatHistory.add(userMessage)
+
         binding.messageInput.text.clear()
+
+        updateMessageList()
 
         showTypingIndicator(true)
 
-        // Формируем запрос с учетом истории сообщений
-        val apiMessages = messages.map {
-            ApiMessage(
-                role = if (it.isUser) "user" else "assistant",
-                content = it.content
-            )
-        }
-
         val request = ChatCompletionRequest(
             model = DEEPSEEK_MODEL,
-            messages = apiMessages,
+            messages = chatHistory.toList(),
             stream = false
         )
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val response = DeepSeekApiClient.apiService.createChatCompletion(request)
-                Log.d(TAG, "API Response: $response")
+                Log.d(TAG, "API Response received for user message: $response")
 
                 withContext(Dispatchers.Main) {
                     showTypingIndicator(false)
-                    response.choices.firstOrNull()?.message?.content?.let { content ->
-                        addBotMessage(content)
-                    } ?: run {
-                        Toast.makeText(requireContext(), "Пустой ответ от нейросети", Toast.LENGTH_SHORT).show()
+
+                    val botMessageContent = response.choices.firstOrNull()?.message?.content
+                    val botMessageRole = response.choices.firstOrNull()?.message?.role
+
+                    if (botMessageRole == "assistant" && !botMessageContent.isNullOrBlank()) {
+                        val botMessage = Message(role = "assistant", content = botMessageContent, timestamp = Date().time)
+                        messages.add(botMessage)
+                        chatHistory.add(botMessage)
+                        updateMessageList()
+                    } else {
+                        val errorDetail = response.choices.firstOrNull()?.finishReason ?: "No content"
+                        Toast.makeText(requireContext(), "Не удалось получить ответ от нейросети: $errorDetail", Toast.LENGTH_LONG).show()
+                        Log.e(TAG, "API response for user message had incorrect role or empty content. Role: $botMessageRole, Content: $botMessageContent")
                     }
                 }
+
             } catch (e: Exception) {
-                Log.e(TAG, "API Error", e)
+                Log.e(TAG, "Error sending user message to API", e)
                 withContext(Dispatchers.Main) {
                     showTypingIndicator(false)
-                    Toast.makeText(
-                        requireContext(),
-                        "Ошибка: ${e.message ?: "Неизвестная ошибка"}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    val errorMessage = "Ошибка при отправке сообщения: ${e.localizedMessage ?: e.message ?: "Неизвестная ошибка"}"
+                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
                 }
             }
         }
-    }
-
-    private fun addUserMessage(text: String) {
-        val userMessage = DisplayMessage(content = text, isUser = true)
-        messages.add(userMessage)
-        updateMessageList()
-    }
-
-    private fun addBotMessage(text: String) {
-        val botMessage = DisplayMessage(content = text, isUser = false)
-        messages.add(botMessage)
-        updateMessageList()
     }
 
     private fun updateMessageList() {
@@ -157,5 +231,6 @@ class NeuroChatFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        Log.d(TAG, "NeuroChatFragment view destroyed.")
     }
 }

@@ -8,7 +8,6 @@ class ProfileViewModel : ViewModel() {
 
     fun saveRoleSelection(selection: RoleSelection) {
         roleSelection = selection
-        // Здесь можно добавить сохранение в БД или SharedPreferences
     }
 
     fun getRoleSelection(): RoleSelection? = roleSelection

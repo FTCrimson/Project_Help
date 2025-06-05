@@ -257,7 +257,6 @@ class EditProfileFragment : Fragment() {
             }
         }
 
-        // Переаутентификация при необходимости
         val needReauth = email != user.email || newPassword.isNotEmpty()
         if (needReauth) {
             if (oldPassword.isEmpty()) {
@@ -295,7 +294,6 @@ class EditProfileFragment : Fragment() {
             }
         } ?: currentAvatarUrl
 
-        // Обновление Firestore
         val userUpdates = hashMapOf<String, Any>(
             "username" to username,
             "email" to email,
@@ -310,14 +308,12 @@ class EditProfileFragment : Fragment() {
             .set(userUpdates, SetOptions.merge())
             .await()
 
-        // Обновление displayName в FirebaseAuth
         user.updateProfile(
             UserProfileChangeRequest.Builder()
                 .setDisplayName(username)
                 .build()
         ).await()
 
-        // Очищаем поля паролей
         withContext(Dispatchers.Main) {
             binding.etOldPassword.text?.clear()
             binding.etNewPassword.text?.clear()

@@ -5,77 +5,93 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:paddingHorizontal="8dp"
+    android:paddingVertical="4dp">
 
     <LinearLayout
         android:id="@+id/botMessageContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@drawable/bg_bot_message"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/guideline"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.85"
+        app:layout_constraintHorizontal_bias="0.0"
+        tools:layout_width="match_parent">
 
-        <TextView
-            android:id="@+id/botMessageText"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#E0E0FF"
-            android:textSize="16sp"
-            tools:text="Привет! Я нейросеть, чем могу помочь?"/>
+            android:layout_marginEnd="16dp"
+            app:cardBackgroundColor="#1E1B24"
+            app:cardCornerRadius="16dp"
+            app:strokeColor="#454059"
+            app:strokeWidth="1dp"
+            app:cardElevation="2dp">
+
+            <TextView
+                android:id="@+id/botMessageText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:textColor="#E0E0FF"
+                android:textSize="16sp"
+                tools:text="Привет! Я нейросеть, чем могу помочь?"/>
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/botMessageTime"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:gravity="end"
+            android:layout_marginStart="12dp"
+            android:layout_gravity="start"
             android:text="12:30"
             android:textColor="#8080A0"
             android:textSize="12sp"/>
     </LinearLayout>
 
-    <!-- Сообщение от пользователя (правая сторона) -->
     <LinearLayout
         android:id="@+id/userMessageContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@drawable/bg_user_message"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.80"
+        app:layout_constraintHorizontal_bias="1.0"
+        tools:layout_width="wrap_content">
 
-        <TextView
-            android:id="@+id/userMessageText"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            tools:text="Привет! Как дела?"/>
+            android:layout_marginStart="16dp"
+            app:cardBackgroundColor="#6200EE"
+            app:cardCornerRadius="16dp"
+            app:strokeColor="#9C27B0"
+            app:strokeWidth="1dp"
+            app:cardElevation="2dp">
+
+            <TextView
+                android:id="@+id/userMessageText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                tools:text="Привет! Как дела?"/>
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/userMessageTime"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:gravity="end"
+            android:layout_marginEnd="12dp"
+            android:layout_gravity="end"
             android:text="12:31"
             android:textColor="#B0B0FF"
             android:textSize="12sp"/>
     </LinearLayout>
-
-    <!-- Гайдлайн для разделения сообщений -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.35"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

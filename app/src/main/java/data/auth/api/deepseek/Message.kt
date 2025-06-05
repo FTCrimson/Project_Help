@@ -1,13 +1,14 @@
-package com.example.project_helper.data.auth.api.deepseek
+package com.example.project_helper.data.api.deepseek
 
 import com.google.gson.annotations.SerializedName
+import java.util.Date
 
-// Представляет одно сообщение в беседе (как в запросе, так и в ответе)
 data class Message(
-    @SerializedName("role") val role: String, // Роль: "user", "system", "assistant"
-    @SerializedName("content") val content: String // Текст сообщения
+    @SerializedName("role") val role: String,
+    @SerializedName("content") val content: String,
+    val timestamp: Long = Date().time
 ) {
-    // Для удобства в адаптере, чтобы различать отправителя
     val isUser: Boolean get() = role == "user"
     val isBot: Boolean get() = role == "assistant"
+    val isSystem: Boolean get() = role == "system"
 }
