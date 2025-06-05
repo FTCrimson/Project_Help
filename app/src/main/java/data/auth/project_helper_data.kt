@@ -1,6 +1,5 @@
 package data.auth
 
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.PropertyName
 import java.util.Date
 

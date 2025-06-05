@@ -108,12 +108,9 @@ class RoleSelectionFragment : Fragment() {
             roleSelection?.let {
                 // Сохраняем выбранные данные через ViewModel
                 viewModel.saveRoleSelection(it)
-
-                // TODO: Здесь можно добавить логику перехода на следующий экран
-                // Например, если вы хотите вернуться назад после сохранения:
-                findNavController().popBackStack()
-                // Или перейти на другой фрагмент:
-                // findNavController().navigate(R.id.action_RoleSelectionFragment_to_NextFragment) // Замените на актуальный ID
+            }
+            binding.nextButton.setOnClickListener {
+                findNavController().navigate(R.id.action_RoleSelectionFragment_to_NeuroChatFragment)
             }
         }
     }

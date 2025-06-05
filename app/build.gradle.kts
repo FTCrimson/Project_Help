@@ -67,6 +67,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
+    implementation("com.squareup.retrofit2:retrofit:2.9.0") // Используем актуальную версию
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0") // Конвертер для Gson
+
+    implementation("com.squareup.okhttp3:okhttp:4.12.0") // Актуальная версия
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0") // Для логирования сетевых запросов
+
     // Glide (для загрузки изображений)
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.firebase.storage.ktx) // Основная библиотека Glide

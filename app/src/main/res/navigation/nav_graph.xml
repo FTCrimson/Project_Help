@@ -68,7 +68,17 @@
     <fragment
         android:id="@+id/roleSelectionFragment"
         android:name="com.example.project_helper.features.fragments.RoleSelectionFragment"
-        android:label="RoleSelectionFragment"
-        tools:layout="@layout/fragment_role_selection" />
+        android:label="RoleSelectionFragment">
+
+        <action
+            android:id="@+id/action_RoleSelectionFragment_to_NeuroChatFragment"
+            app:destination="@id/NeuroChatFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/NeuroChatFragment"
+        android:name="com.example.project_helper.features.auth.fragments.NeuroChatFragment"
+        android:label="Profile"/>
 
 </navigation>
