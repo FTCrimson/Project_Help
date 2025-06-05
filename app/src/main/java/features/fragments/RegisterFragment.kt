@@ -52,8 +52,8 @@ class RegisterFragment : Fragment() {
     private fun setupValidationListeners() {
         binding.nickReg.addTextChangedListener(validationWatcher)
         binding.emailReg.addTextChangedListener(validationWatcher)
+        binding.etPhone.addTextChangedListener(validationWatcher)
         binding.passwordReg.addTextChangedListener(validationWatcher)
-
     }
 
     private val validationWatcher = object : TextWatcher {
@@ -67,13 +67,15 @@ class RegisterFragment : Fragment() {
     private fun validateAllInputs(): Boolean {
         val username = binding.nickReg.text.toString().trim()
         val email = binding.emailReg.text.toString().trim()
+        val phone = binding.etPhone.text.toString().trim()
         val password = binding.passwordReg.text.toString().trim()
 
         val isUsernameValid = validateUsername(username)
         val isEmailValid = validateEmail(email)
+        val isPhoneValid = validatePhone(phone)
         val isPasswordValid = validatePassword(password)
 
-        return isUsernameValid && isEmailValid && isPasswordValid
+        return isUsernameValid && isEmailValid && isPhoneValid && isPasswordValid
     }
 
     private fun validateUsername(username: String): Boolean {
@@ -117,6 +119,13 @@ class RegisterFragment : Fragment() {
         }
     }
 
+    private fun validatePhone(phone: String): Boolean {
+        return if (phone.isEmpty() || !phone.matches(Regex("^\\+7\\d{10}$"))) {
+            binding.etPhone.error = "Формат: +7XXXXXXXXXX"
+            false
+        } else true
+    }
+
     private fun validatePassword(password: String): Boolean {
         return when {
             password.isEmpty() -> {
@@ -158,21 +167,30 @@ class RegisterFragment : Fragment() {
         val email = binding.emailReg.text.toString().trim()
         val password = binding.passwordReg.text.toString().trim()
         val username = binding.nickReg.text.toString().trim()
+        val phone = binding.etPhone.text.toString().trim()
 
+        binding.progressBar.visibility = View.VISIBLE
+
+        createUserAccount(email, password, username, phone)
+    }
+
+    private fun createUserAccount(email: String, password: String, username: String, phone: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(requireActivity()) { task ->
+                binding.progressBar.visibility = View.GONE
                 if (task.isSuccessful) {
-                    saveUserToFirestore(username, email)
+                    saveUserToFirestore(username, email, phone)
                 } else {
                     handleRegistrationError(task.exception)
                 }
             }
     }
 
-    private fun saveUserToFirestore(username: String, email: String) {
+    private fun saveUserToFirestore(username: String, email: String, phone: String) {
         val user = hashMapOf(
             "username" to username,
             "email" to email,
+            "phone" to phone,
             "registration_date" to FieldValue.serverTimestamp(),
             "last_login" to FieldValue.serverTimestamp()
         )

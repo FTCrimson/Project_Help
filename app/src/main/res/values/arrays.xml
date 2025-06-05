@@ -1,0 +1,40 @@
+<resources>
+    <string-array name="student_roles">
+        <item>Лидер</item>
+        <item>Дизайнер</item>
+        <item>Тестировщик</item>
+        <item>Бэкендер</item>
+        <item>Фронтендер</item>
+        <item>Аналитик</item>
+        <item>Менеджер</item>
+        <item>DevOps</item>
+        <item>QA</item>
+        <item>Другое</item>
+    </string-array>
+
+    <string-array name="activity_fields">
+        <item>Фронтенд разработка</item>
+        <item>Бэкенд разработка</item>
+        <item>Дизайн по Figma</item>
+        <item>Тестирование ПО</item>
+        <item>Управление проектами</item>
+        <item>Анализ данных</item>
+        <item>Разработка мобильных приложений</item>
+        <item>DevOps</item>
+        <item>Data Science</item>
+        <item>Другое</item>
+    </string-array>
+
+    <string-array name="expert_fields">
+        <item>Эксперт по фронтенд разработке</item>
+        <item>Эксперт по бэкенд разработке</item>
+        <item>Эксперт по дизайну Figma</item>
+        <item>Эксперт по тестированию ПО</item>
+        <item>Эксперт по управлению проектами</item>
+        <item>Эксперт по анализу данных</item>
+        <item>Эксперт по мобильной разработке</item>
+        <item>Эксперт по DevOps</item>
+        <item>Эксперт по Data Science</item>
+        <item>Эксперт в другой области</item>
+    </string-array>
+</resources>

@@ -13,11 +13,29 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"/>
+
         <ImageView
             android:id="@+id/iv_profile"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
             android:src="@drawable/ic_default_avatar"
             android:contentDescription="Profile image"/>
 
@@ -25,6 +43,7 @@
             android:id="@+id/btn_change_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/black"
             android:layout_gravity="center"
             android:text="Change Avatar"/>
 
@@ -95,6 +114,7 @@
         <Button
             android:id="@+id/btn_save"
             android:layout_width="match_parent"
+            android:backgroundTint="@color/black"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Save Changes"/>

@@ -1,9 +1,8 @@
-// EditProfileFragment.kt
 package com.example.project_helper.features.profile
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +15,19 @@ import com.example.project_helper.R
 import com.example.project_helper.databinding.FragmentEditProfileBinding
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import data.auth.UserData
 import java.util.UUID
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class EditProfileFragment : Fragment() {
 
@@ -31,12 +38,17 @@ class EditProfileFragment : Fragment() {
     private lateinit var db: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
     private var selectedImageUri: Uri? = null
+    private var currentUsername: String? = null
+    private var currentAvatarUrl: String? = null
+    private var currentEmail: String? = null
 
     private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             selectedImageUri = it
             Glide.with(this)
                 .load(it)
+                .circleCrop()
+                .placeholder(R.drawable.ic_default_avatar)
                 .into(binding.ivProfile)
         }
     }
@@ -68,15 +80,32 @@ class EditProfileFragment : Fragment() {
                 .addOnSuccessListener { document ->
                     val userData = document.toObject(UserData::class.java)
                     userData?.let {
+                        currentUsername = it.username
+                        currentAvatarUrl = it.avatarUrl
+                        currentEmail = it.email
+
                         binding.etUsername.setText(it.username ?: "")
                         binding.etEmail.setText(it.email ?: "")
                         binding.etPhone.setText(it.phone ?: "+7********")
 
-                        Glide.with(this)
-                            .load(it.avatarUrl)
-                            .placeholder(R.drawable.ic_default_avatar)
-                            .into(binding.ivProfile)
+                        it.avatarUrl?.let { url ->
+                            if (url.isNotBlank()) {
+                                Glide.with(this)
+                                    .load(url)
+                                    .circleCrop()
+                                    .placeholder(R.drawable.ic_default_avatar)
+                                    .into(binding.ivProfile)
+                            } else {
+                                binding.ivProfile.setImageResource(R.drawable.ic_default_avatar)
+                            }
+                        } ?: run {
+                            binding.ivProfile.setImageResource(R.drawable.ic_default_avatar)
+                        }
                     }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(context, "Ошибка загрузки данных: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Log.e("EditProfile", "Ошибка загрузки данных", e)
                 }
         }
     }
@@ -88,9 +117,36 @@ class EditProfileFragment : Fragment() {
 
         binding.btnSave.setOnClickListener {
             if (validateInputs()) {
-                updateProfile()
+                CoroutineScope(Dispatchers.Main).launch {
+                    binding.progressBar.visibility = View.VISIBLE
+                    try {
+                        withContext(Dispatchers.IO) {
+                            updateProfile()
+                        }
+                        Toast.makeText(context, "Профиль обновлен", Toast.LENGTH_SHORT).show()
+                        findNavController().navigateUp()
+                    } catch (e: Exception) {
+                        handleUpdateError(e)
+                    } finally {
+                        binding.progressBar.visibility = View.GONE
+                    }
+                }
             }
         }
+    }
+
+    private fun handleUpdateError(e: Exception) {
+        val errorMessage = when {
+            e is FirebaseAuthInvalidCredentialsException -> "Неверный пароль"
+            e is FirebaseAuthUserCollisionException -> "Email уже используется другим аккаунтом"
+            e.message?.contains("username", ignoreCase = true) == true -> "Имя пользователя уже занято"
+            e.message?.contains("requires recent authentication", ignoreCase = true) == true -> "Требуется повторный вход"
+            e.message == "Требуется ввод пароля" -> "Для изменения email/пароля введите текущий пароль"
+            e.message == "Неверный пароль" -> "Неверный текущий пароль"
+            else -> "Ошибка: ${e.message ?: "Неизвестная ошибка"}"
+        }
+        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+        Log.e("EditProfile", "Ошибка обновления профиля", e)
     }
 
     private fun validateInputs(): Boolean {
@@ -99,17 +155,30 @@ class EditProfileFragment : Fragment() {
         val phone = binding.etPhone.text.toString().trim()
         val oldPassword = binding.etOldPassword.text.toString().trim()
         val newPassword = binding.etNewPassword.text.toString().trim()
+        val user = auth.currentUser
 
-        if (!validateUsername(username)) return false
-        if (!validateEmail(email)) return false
-        if (!validatePhone(phone)) return false
-        if (newPassword.isNotEmpty() && !validatePassword(newPassword)) return false
-        if (newPassword.isNotEmpty() && oldPassword.isEmpty()) {
-            binding.etOldPassword.error = "Введите старый пароль"
-            return false
+        var isValid = true
+
+        binding.etOldPassword.error = null
+
+        if (email != user?.email) {
+            if (oldPassword.isEmpty()) {
+                binding.etOldPassword.error = "Введите пароль для изменения email"
+                isValid = false
+            }
         }
 
-        return true
+        if (newPassword.isNotEmpty() && oldPassword.isEmpty()) {
+            binding.etOldPassword.error = "Введите текущий пароль"
+            isValid = false
+        }
+
+        if (!validateUsername(username)) isValid = false
+        if (!validateEmail(email)) isValid = false
+        if (!validatePhone(phone)) isValid = false
+        if (newPassword.isNotEmpty() && !validatePassword(newPassword)) isValid = false
+
+        return isValid
     }
 
     private fun validateUsername(username: String): Boolean {
@@ -167,16 +236,12 @@ class EditProfileFragment : Fragment() {
                 binding.etNewPassword.error = "Нужна хотя бы 1 цифра"
                 false
             }
-            password.contains(Regex("[,.!?]")) -> {
-                binding.etNewPassword.error = "Запрещены ,.!? Разрешены @#_"
-                false
-            }
             else -> true
         }
     }
 
-    private fun updateProfile() {
-        val user = auth.currentUser ?: return
+    private suspend fun updateProfile() {
+        val user = auth.currentUser ?: throw Exception("Пользователь не авторизован")
         val userId = user.uid
 
         val username = binding.etUsername.text.toString()
@@ -185,74 +250,78 @@ class EditProfileFragment : Fragment() {
         val oldPassword = binding.etOldPassword.text.toString()
         val newPassword = binding.etNewPassword.text.toString()
 
-        // Обновление аватарки
-        selectedImageUri?.let { uri ->
-            val storageRef = storage.reference
-            val imageRef = storageRef.child("avatars/${userId}/${UUID.randomUUID()}")
-
-            imageRef.putFile(uri)
-                .continueWithTask { task ->
-                    if (!task.isSuccessful) {
-                        task.exception?.let { throw it }
-                    }
-                    imageRef.downloadUrl
-                }
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val downloadUri = task.result
-                        updateUserData(userId, username, email, phone, downloadUri.toString())
-                    } else {
-                        Toast.makeText(context, "Ошибка загрузки аватарки", Toast.LENGTH_SHORT).show()
-                    }
-                }
-        } ?: run {
-            updateUserData(userId, username, email, phone, null)
+        if (username != currentUsername) {
+            val isUnique = db.collection("usernames").document(username).get().await().exists().not()
+            if (!isUnique) {
+                throw Exception("Имя пользователя уже занято")
+            }
         }
 
-        // Обновление email
+        // Переаутентификация при необходимости
+        val needReauth = email != user.email || newPassword.isNotEmpty()
+        if (needReauth) {
+            if (oldPassword.isEmpty()) {
+                throw Exception("Требуется ввод пароля")
+            }
+            try {
+                val credential = EmailAuthProvider.getCredential(user.email!!, oldPassword)
+                user.reauthenticate(credential).await()
+            } catch (e: Exception) {
+                throw Exception("Неверный пароль")
+            }
+        }
+
         if (email != user.email) {
-            user.updateEmail(email)
-                .addOnFailureListener { e ->
-                    Toast.makeText(context, "Ошибка обновления email: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+            try {
+                user.updateEmail(email).await()
+                currentEmail = email
+            } catch (e: FirebaseAuthUserCollisionException) {
+            }
         }
 
-        // Обновление пароля
         if (newPassword.isNotEmpty()) {
-            val credential = EmailAuthProvider.getCredential(user.email!!, oldPassword)
-            user.reauthenticate(credential)
-                .addOnSuccessListener {
-                    user.updatePassword(newPassword)
-                        .addOnSuccessListener {
-                            Toast.makeText(context, "Пароль обновлен", Toast.LENGTH_SHORT).show()
-                        }
-                }
-                .addOnFailureListener {
-                    Toast.makeText(context, "Неверный старый пароль", Toast.LENGTH_SHORT).show()
-                }
+            user.updatePassword(newPassword).await()
         }
-    }
 
-    private fun updateUserData(userId: String, username: String, email: String, phone: String, avatarUrl: String?) {
-        val updates = hashMapOf<String, Any>(
+        val avatarUrl = selectedImageUri?.let { uri ->
+            try {
+                val storageRef = storage.reference
+                val imageRef = storageRef.child("avatars/${userId}/${UUID.randomUUID()}")
+                imageRef.putFile(uri).await()
+                imageRef.downloadUrl.await().toString()
+            } catch (e: Exception) {
+                Log.e("EditProfile", "Ошибка загрузки аватара", e)
+                currentAvatarUrl
+            }
+        } ?: currentAvatarUrl
+
+        // Обновление Firestore
+        val userUpdates = hashMapOf<String, Any>(
             "username" to username,
             "email" to email,
             "phone" to phone
         )
 
-        avatarUrl?.let {
-            updates["avatarUrl"] = it
+        avatarUrl?.takeIf { it.isNotBlank() }?.let {
+            userUpdates["avatarUrl"] = it
         }
 
         db.collection("users").document(userId)
-            .update(updates)
-            .addOnSuccessListener {
-                Toast.makeText(context, "Профиль обновлен", Toast.LENGTH_SHORT).show()
-                findNavController().navigateUp()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(context, "Ошибка обновления: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+            .set(userUpdates, SetOptions.merge())
+            .await()
+
+        // Обновление displayName в FirebaseAuth
+        user.updateProfile(
+            UserProfileChangeRequest.Builder()
+                .setDisplayName(username)
+                .build()
+        ).await()
+
+        // Очищаем поля паролей
+        withContext(Dispatchers.Main) {
+            binding.etOldPassword.text?.clear()
+            binding.etNewPassword.text?.clear()
+        }
     }
 
     override fun onDestroyView() {
