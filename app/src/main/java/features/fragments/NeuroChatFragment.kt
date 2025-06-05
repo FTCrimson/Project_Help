@@ -22,8 +22,6 @@ import com.example.project_helper.data.auth.api.deepseek.ChatCompletionRequest
 import com.example.project_helper.data.auth.api.deepseek.Message as ApiMessage
 import com.example.project_helper.features.neurochat.MessageAdapter
 import com.example.project_helper.features.neurochat.MessageAdapter.DisplayMessage
-import org.commonmark.parser.Parser
-import org.commonmark.renderer.html.HtmlRenderer
 
 class NeuroChatFragment : Fragment() {
 
