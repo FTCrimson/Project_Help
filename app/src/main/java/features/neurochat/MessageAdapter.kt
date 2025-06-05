@@ -6,74 +6,84 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.project_helper.data.auth.api.deepseek.Message
-import com.example.project_helper.databinding.ItemMessageBinding // Используем View Binding для item_message.xml
+import com.example.project_helper.databinding.ItemMessageBinding
+import io.noties.markwon.Markwon
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.UUID
 
-// Адаптер для списка сообщений в чате
-class MessageAdapter : ListAdapter<Message, MessageAdapter.MessageViewHolder>(MessageDiffCallback()) {
+class MessageAdapter(
+    private val markwon: Markwon
+) : ListAdapter<MessageAdapter.DisplayMessage, MessageAdapter.MessageViewHolder>(MessageDiffCallback()) {
 
-    // Константы для типов представлений (ViewType)
-    private val VIEW_TYPE_USER = 1
-    private val VIEW_TYPE_BOT = 2
+    // Класс для отображения с уникальным ID
+    data class DisplayMessage(
+        val id: String = UUID.randomUUID().toString(),
+        val content: String,
+        val isUser: Boolean,
+        val timestamp: Long = System.currentTimeMillis()
+    )
 
-    // ViewHolder для элементов списка
-    class MessageViewHolder(private val binding: ItemMessageBinding) : RecyclerView.ViewHolder(binding.root) {
-        // Форматтер времени
+    inner class MessageViewHolder(private val binding: ItemMessageBinding) : RecyclerView.ViewHolder(binding.root) {
         private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
-        fun bind(message: Message) {
-            // Скрываем оба контейнера по умолчанию
-            binding.userMessageContainer.visibility = View.GONE
-            binding.botMessageContainer.visibility = View.GONE
+        fun bind(message: DisplayMessage) {
+            binding.apply {
+                // Скрываем оба контейнера
+                userMessageContainer.visibility = View.GONE
+                botMessageContainer.visibility = View.GONE
 
-            // Определяем, кто отправил сообщение, и показываем нужный контейнер
-            if (message.isUser) {
-                // Это сообщение пользователя
-                binding.userMessageContainer.visibility = View.VISIBLE
-                binding.userMessageText.text = message.content
-                binding.userMessageTime.text = timeFormat.format(Date()) // Или используй время из API/локальное время создания
-            } else {
-                // Это сообщение нейросети
-                binding.botMessageContainer.visibility = View.VISIBLE
-                binding.botMessageText.text = message.content
-                binding.botMessageTime.text = timeFormat.format(Date()) // Или используй время из API/локальное время создания
+                // Форматируем время
+                val timeText = timeFormat.format(Date(message.timestamp))
+
+                if (message.isUser) {
+                    userMessageContainer.visibility = View.VISIBLE
+                    userMessageText.text = message.content
+                    userMessageTime.text = timeText
+                } else {
+                    botMessageContainer.visibility = View.VISIBLE
+                    markwon.setMarkdown(botMessageText, message.content) // Применяем Markdown
+                    botMessageTime.text = timeText
+
+                    // Добавляем обработчик для раскрытия/скрытия длинных сообщений
+                    botMessageText.setOnClickListener {
+                        if (botMessageText.maxLines == 10) {
+                            botMessageText.maxLines = Integer.MAX_VALUE
+                        } else {
+                            botMessageText.maxLines = 10
+                        }
+                    }
+                }
             }
         }
     }
 
-    // Определяет тип представления для элемента в заданной позиции
     override fun getItemViewType(position: Int): Int {
         return if (getItem(position).isUser) VIEW_TYPE_USER else VIEW_TYPE_BOT
     }
 
-    // Создает новые ViewHolders (вызывается LayoutManager'ом, когда нужен новый ViewHolder)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        // Надуваем разметку элемента списка
         val binding = ItemMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MessageViewHolder(binding)
     }
 
-    // Заменяет содержимое представления (View) элемента списка (вызывается LayoutManager'ом)
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-        val message = getItem(position) // Получаем сообщение по позиции
-        holder.bind(message) // Привязываем данные к ViewHolder'у
+        holder.bind(getItem(position))
     }
 
-    // DiffUtil.ItemCallback для эффективного обновления списка
-    class MessageDiffCallback : DiffUtil.ItemCallback<Message>() {
-        // Проверяет, является ли один и тот же элемент
-        override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean {
-            // В простом случае, можем считать элементы одинаковыми, если у них одинаковое содержимое
-            // В реальном приложении лучше использовать уникальный ID сообщения
-            return oldItem.content == newItem.content && oldItem.role == newItem.role // Упрощенная проверка
+    class MessageDiffCallback : DiffUtil.ItemCallback<DisplayMessage>() {
+        override fun areItemsTheSame(oldItem: DisplayMessage, newItem: DisplayMessage): Boolean {
+            return oldItem.id == newItem.id
         }
 
-        // Проверяет, совпадает ли содержимое элементов
-        override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean {
-            return oldItem == newItem // Data class автоматически генерирует equals/hashCode на основе всех свойств
+        override fun areContentsTheSame(oldItem: DisplayMessage, newItem: DisplayMessage): Boolean {
+            return oldItem == newItem
         }
+    }
+
+    companion object {
+        private const val VIEW_TYPE_USER = 1
+        private const val VIEW_TYPE_BOT = 2
     }
 }
