@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 import android.util.Log
 import android.widget.Toast
 import com.example.project_helper.data.auth.api.deepseek.ChatCompletionRequest
-import features.fragments.ProfileViewModel
+import features.viewmodel.ProfileViewModel
 import java.util.Date
 
 class NeuroChatFragment : Fragment() {
@@ -145,7 +145,7 @@ class NeuroChatFragment : Fragment() {
         }
 
         return """
-            Ты — дружелюбный и креативный помощник в проектной деятельности.
+            Ты — дружелюбный и креативный помощник в проектной деятельности и Тебя зовут Project Helper.
             Твоя основная задача — помочь пользователю, который является $userInfo, создать или развить его проект.
             Поприветствуй пользователя, представься как помощник по проектной деятельности и вежливо попроси его рассказать о проекте, над которым он работает или который хочет создать.
             Когда пользователь опишет свой проект, внимательно проанализируй предоставленную информацию, учитывая его роль и сферу деятельности, которую он выбрал ранее.

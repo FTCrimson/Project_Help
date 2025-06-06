@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_neon_gradient"
+    android:padding="24dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/wordsCard"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="16dp"
+        app:cardBackgroundColor="#20000000"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/word1TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Искусственный"
+                android:textColor="#00FFFF"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:shadowColor="#00FFFF"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="10" />
+
+            <TextView
+                android:id="@+id/word2TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="интеллект"
+                android:textColor="#FF00FF"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:shadowColor="#FF00FF"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="10" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Придумай идею!"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:alpha="0.7" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/newWordsButton"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/btn_neon_blue"
+        android:text="Другие слова"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:icon="@drawable/ic_refresh"
+        app:iconTint="#FFFFFF"
+        app:iconPadding="8dp"
+        app:iconGravity="start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wordsCard" />
+
+    <Button
+        android:id="@+id/aiHelpButton"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/btn_neon_purple_pulse"
+        android:text="AI Help"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:icon="@drawable/ic_ai"
+        app:iconTint="#FFFFFF"
+        app:iconPadding="8dp"
+        app:iconGravity="start"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/newWordsButton"
+        app:layout_constraintWidth_percent="0.8" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

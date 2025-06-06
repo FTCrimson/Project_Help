@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.project_helper.R
 import com.example.project_helper.data.auth.RoleSelection
 import com.example.project_helper.databinding.FragmentRoleSelectionBinding
-import features.fragments.ProfileViewModel
+import features.viewmodel.ProfileViewModel
 
 class RoleSelectionFragment : Fragment() {
 
@@ -97,7 +97,7 @@ class RoleSelectionFragment : Fragment() {
                 viewModel.saveRoleSelection(it)
             }
             binding.nextButton.setOnClickListener {
-                findNavController().navigate(R.id.action_RoleSelectionFragment_to_NeuroChatFragment)
+                findNavController().navigate(R.id.action_RoleSelectionFragment_to_BrainStormFragment)
             }
         }
     }

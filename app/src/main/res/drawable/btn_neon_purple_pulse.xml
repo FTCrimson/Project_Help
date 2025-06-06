@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/btn_neon_purple_pulse.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Состояние по умолчанию (не нажата) -->
+    <item android:state_pressed="false">
+        <layer-list>
+            <!-- Внешнее свечение: полупрозрачный фон с отступами -->
+            <!-- Этот слой создает эффект размытого свечения вокруг основной кнопки -->
+            <item>
+                <shape android:shape="rectangle">
+                    <!-- Цвет свечения - полупрозрачный фиолетовый -->
+                    <solid android:color="#40d400ff"/>
+                    <corners android:radius="35dp"/>
+                    <!-- ИСПРАВЛЕНО: Используем явные отступы для padding -->
+                    <!-- Эти отступы делают этот слой больше основного,
+                         создавая пространство для свечения -->
+                    <padding
+                        android:bottom="8dp"
+                        android:left="8dp"
+                        android:right="8dp"
+                        android:top="8dp"/>
+                </shape>
+            </item>
+
+            <!-- Основная кнопка: градиентная заливка -->
+            <!-- Этот слой - сама видимая часть кнопки -->
+            <item>
+                <shape android:shape="rectangle">
+                    <!-- Градиент от фиолетового к более светлому фиолетовому -->
+                    <gradient
+                        android:startColor="#9d00ff"
+                        android:endColor="#d400ff"
+                        android:angle="90"/>
+                    <corners android:radius="35dp"/>
+                    <!-- Обратите внимание: У этого слоя нет padding,
+                         поэтому он будет меньше слоя свечения,
+                         оставляя видимым "ореол" свечения -->
+                </shape>
+            </item>
+
+            <!-- Внутреннее свечение: тонкая обводка -->
+            <!-- Этот слой добавляет тонкую линию по краю основной кнопки для усиления эффекта -->
+            <item>
+                <shape android:shape="rectangle">
+                    <!-- Тонкая белая обводка -->
+                    <stroke
+                        android:width="1dp"
+                        android:color="#ffffff"/>
+                    <corners android:radius="35dp"/>
+                    <!-- Также без padding, соответствует размеру основной кнопки -->
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Состояние нажатия -->
+    <!-- Можно определить другое визуальное состояние, когда кнопка нажата -->
+    <!-- Пока это просто пример, можно настроить цвета, альфу и тень по-другому -->
+    <item android:state_pressed="true">
+        <layer-list>
+            <!-- Аналогичная структура, но можно изменить solid/gradient/stroke color/alpha
+                 для визуального отклика на нажатие -->
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="#60ff00ff"/> <!-- Более яркое свечение при нажатии -->
+                    <corners android:radius="35dp"/>
+                    <padding
+                        android:bottom="8dp"
+                        android:left="8dp"
+                        android:right="8dp"
+                        android:top="8dp"/>
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <gradient
+                    android:startColor="#b833ff"
+                    android:endColor="#ff33ff"
+                    android:angle="90"/>
+                    <corners android:radius="35dp"/>
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <stroke
+                        android:width="1dp"
+                        android:color="#ffffff"/>
+                    <corners android:radius="35dp"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!--
+        Примечание про анимацию пульсации:
+        Animated-selector с transition предназначен для анимации перехода
+        между состояниями (например, press/release).
+
+        Для эффекта постоянной пульсации, который мы обсуждали ранее
+        и реализовали в Kotlin коде фрагмента (ObjectAnimator, ValueAnimator),
+        эта часть XML (transition) НЕ используется.
+
+        ObjectAnimator в Kotlin напрямую управляет свойствами View (alpha, scale),
+        что дает большую гибкость для создания кастомных анимаций вроде пульсации,
+        не связанных напрямую с состояниями (pressed/focused).
+
+        Поэтому, хотя animated-selector и transition здесь могут быть синтаксически верными
+        (если их правильно определить), основной эффект пульсации для кнопки AI Help
+        будет исходить из кода фрагмента CombinationsFragment.kt.
+
+        Если этот <animated-selector> все еще вызывает ошибки (иногда это происходит
+        в старых версиях AGP/SDK или из-за специфики transition),
+        можно заменить весь корневой тег <animated-selector> на простой <selector>
+        и удалить <transition>, оставив только <item android:state_pressed="false">
+        и, опционально, <item android:state_pressed="true">.
+        Но пока попробуем с этим вариантом.
+    -->
+
+    <!-- Пример определения transition, если используется animated-selector -->
+    <!--
+    <transition android:fromId="@id/state_normal" android:toId="@id/state_pressed">
+        <animation-list>
+             <item android:duration="100">
+                  ... (Определение анимации для перехода) ...
+             </item>
+        </animation-list>
+    </transition>
+    -->
+
+</selector>

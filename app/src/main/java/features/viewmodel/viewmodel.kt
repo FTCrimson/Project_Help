@@ -1,4 +1,4 @@
-package features.fragments
+package features.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.project_helper.data.auth.RoleSelection

@@ -71,7 +71,29 @@
         android:label="RoleSelectionFragment">
 
         <action
-            android:id="@+id/action_RoleSelectionFragment_to_NeuroChatFragment"
+            android:id="@+id/action_RoleSelectionFragment_to_BrainStormFragment"
+            app:destination="@id/BrainStormFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/BrainStormFragment"
+        android:name="com.example.project_helper.features.fragments.BrainStormFragment"
+        android:label="BrainStormFragment">
+
+        <action
+            android:id="@+id/action_BrainStormFragment_to_CombinationsFragment"
+            app:destination="@id/CombinationsFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/CombinationsFragment"
+        android:name="com.example.project_helper.features.fragments.CombinationsFragment"
+        android:label="CombinationsFragment">
+
+        <action
+            android:id="@+id/action_CombinationsFragment_to_NeuroChatFragment"
             app:destination="@id/NeuroChatFragment" />
 
     </fragment>
