@@ -49,7 +49,6 @@ class NeuroChatFragment : Fragment() {
 
     private var isDrawerOpen = false
 
-    // Добавлены ссылки на элементы выдвижной панели
     private lateinit var drawerContainer: ConstraintLayout
     private lateinit var drawerPanel: View
     private lateinit var drawerOverlay: View
@@ -143,13 +142,11 @@ class NeuroChatFragment : Fragment() {
         isDrawerOpen = true
         drawerContainer.visibility = View.VISIBLE
 
-        // Анимация затемнения
         drawerOverlay.animate()
             .alpha(1f)
             .setDuration(300)
             .start()
 
-        // Анимация выезжания панели
         drawerPanel.animate()
             .translationX(0f)
             .setDuration(300)
@@ -161,13 +158,11 @@ class NeuroChatFragment : Fragment() {
 
         isDrawerOpen = false
 
-        // Анимация скрытия затемнения
         drawerOverlay.animate()
             .alpha(0f)
             .setDuration(300)
             .start()
 
-        // Анимация скрытия панели
         drawerPanel.animate()
             .translationX(-280f)
             .setDuration(300)
@@ -188,7 +183,20 @@ class NeuroChatFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val response = DeepSeekApiClient.apiService.createChatCompletion(request)
+                // Попытка инициализации клиента перед использованием
+                DeepSeekApiClient.initialize()
+                val apiService = DeepSeekApiClient.apiService
+
+                if (apiService == null) {
+                    withContext(Dispatchers.Main) {
+                        showTypingIndicator(false)
+                        Toast.makeText(requireContext(), "Не удалось инициализировать API клиент.", Toast.LENGTH_LONG).show()
+                    }
+                    Log.e(TAG, "API client not initialized.")
+                    return@launch // Выходим из корутины
+                }
+
+                val response = apiService.createChatCompletion(request)
                 Log.d(TAG, "Initial API Response received: $response")
 
                 withContext(Dispatchers.Main) {
@@ -203,9 +211,9 @@ class NeuroChatFragment : Fragment() {
                         chatHistory.add(botMessage)
                         updateMessageList()
                     } else {
-                        val errorDetail = response.choices.firstOrNull()?.finishReason ?: "No content"
+                        val errorDetail = response.choices.firstOrNull()?.finishReason ?: "No content or invalid response"
                         Toast.makeText(requireContext(), "Не удалось получить первое сообщение от нейросети: $errorDetail", Toast.LENGTH_LONG).show()
-                        Log.e(TAG, "Initial API response had incorrect role or empty content. Role: $botMessageRole, Content: $botMessageContent")
+                        Log.e(TAG, "Initial API response had incorrect role or empty content. Role: $botMessageRole, Content: $botMessageContent, Error Detail: $errorDetail")
                     }
                 }
 
@@ -268,7 +276,19 @@ class NeuroChatFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val response = DeepSeekApiClient.apiService.createChatCompletion(request)
+                DeepSeekApiClient.initialize()
+                val apiService = DeepSeekApiClient.apiService
+
+                if (apiService == null) {
+                    withContext(Dispatchers.Main) {
+                        showTypingIndicator(false)
+                        Toast.makeText(requireContext(), "Не удалось инициализировать API клиент.", Toast.LENGTH_LONG).show()
+                    }
+                    Log.e(TAG, "API client not initialized.")
+                    return@launch
+                }
+
+                val response = apiService.createChatCompletion(request)
                 Log.d(TAG, "API Response received for user message: $response")
 
                 withContext(Dispatchers.Main) {
@@ -283,9 +303,9 @@ class NeuroChatFragment : Fragment() {
                         chatHistory.add(botMessage)
                         updateMessageList()
                     } else {
-                        val errorDetail = response.choices.firstOrNull()?.finishReason ?: "No content"
+                        val errorDetail = response.choices.firstOrNull()?.finishReason ?: "No content or invalid response"
                         Toast.makeText(requireContext(), "Не удалось получить ответ от нейросети: $errorDetail", Toast.LENGTH_LONG).show()
-                        Log.e(TAG, "API response for user message had incorrect role or empty content. Role: $botMessageRole, Content: $botMessageContent")
+                        Log.e(TAG, "API response for user message had incorrect role or empty content. Role: $botMessageRole, Content: $botMessageContent, Error Detail: $errorDetail")
                     }
                 }
 

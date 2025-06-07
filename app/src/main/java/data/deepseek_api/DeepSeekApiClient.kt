@@ -1,5 +1,6 @@
 package com.example.project_helper.data.api.deepseek
 
+import com.example.project_helper.data.FirestoreApiKeyFetcher
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -9,35 +10,51 @@ import java.util.concurrent.TimeUnit
 
 object DeepSeekApiClient {
 
-    private const val DEEPSEEK_API_KEY = "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" // <-- ЗАМЕНИТЕ НА СВОЙ API КЛЮЧ!
-
+    private var deepseekApiKey: String? = null
     private const val BASE_URL = "https://openrouter.ai/api/v1/"
 
-    private val authInterceptor = Interceptor { chain ->
-        val req = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer $DEEPSEEK_API_KEY")
-            .addHeader("Content-Type", "application/json")
+    private var initializedOkHttpClient: OkHttpClient? = null
+    var apiService: DeepSeekApiService? = null
+        private set
+
+    suspend fun initialize() {
+        if (deepseekApiKey != null) return
+
+        val fetcher = FirestoreApiKeyFetcher()
+        deepseekApiKey = fetcher.fetchDeepSeekApiKey()
+
+        if (deepseekApiKey == null) {
+            println("Не удалось получить API ключ из Firestore.")
+            // Возможно, здесь нужно выбросить исключение или предпринять другие действия
+            return
+        }
+
+        val authInterceptor = Interceptor { chain ->
+            val req = chain.request().newBuilder()
+                .addHeader("Authorization", "Bearer $deepseekApiKey")
+                .addHeader("Content-Type", "application/json")
+                .build()
+            chain.proceed(req)
+        }
+
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+
+        initializedOkHttpClient = OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .addInterceptor(loggingInterceptor)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
-        chain.proceed(req)
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(initializedOkHttpClient!!)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        apiService = retrofit.create(DeepSeekApiService::class.java)
     }
-
-    private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
-    }
-
-    private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(authInterceptor)
-        .addInterceptor(loggingInterceptor)
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .build()
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    val apiService: DeepSeekApiService = retrofit.create(DeepSeekApiService::class.java)
 }
