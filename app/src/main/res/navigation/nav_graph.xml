@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.project_helper.features.auth.fragments.LoginFragment"
+        android:name="com.example.project_helper.features.fragments.LoginFragment"
         android:label="Login">
 
         <action
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.project_helper.features.auth.fragments.RegisterFragment"
+        android:name="com.example.project_helper.features.fragments.RegisterFragment"
         android:label="Register">
 
         <action
@@ -100,7 +100,7 @@
 
     <fragment
         android:id="@+id/NeuroChatFragment"
-        android:name="com.example.project_helper.features.auth.fragments.NeuroChatFragment"
+        android:name="com.example.project_helper.features.fragments.NeuroChatFragment"
         android:label="NeuroChatFragment">
 
         <action

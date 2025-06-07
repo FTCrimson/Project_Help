@@ -1,4 +1,4 @@
-package com.example.project_helper.data.auth.api.deepseek
+package com.example.project_helper.data.api.deepseek
 
 import com.example.project_helper.data.api.deepseek.Message
 import com.google.gson.annotations.SerializedName

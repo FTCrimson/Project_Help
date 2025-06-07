@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.project_helper.data.repository.ChatRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
-import data.auth.commandchat.Chat
-import data.auth.commandchat.ChatMessage
+import data.commandchat.Chat
+import data.commandchat.ChatMessage
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged

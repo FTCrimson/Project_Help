@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.project_helper.R
-import data.auth.commandchat.Chat
+import data.commandchat.Chat
 
 class ChatAdapter(
     private val onChatClick: (Chat) -> Unit,

@@ -21,8 +21,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import data.auth.commandchat.Chat
-import data.auth.commandchat.User
+import data.commandchat.Chat
+import data.commandchat.User
 
 class CommandChatFragment : Fragment() {
 

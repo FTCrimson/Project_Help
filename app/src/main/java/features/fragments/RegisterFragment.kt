@@ -1,4 +1,4 @@
-package com.example.project_helper.features.auth.fragments
+package com.example.project_helper.features.fragments
 
 import android.os.Bundle
 import android.text.Editable

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.project_helper.R
-import data.auth.commandchat.ChatMessage
+import data.commandchat.ChatMessage
 
 class ChatMessageAdapter(private val currentUserId: String) :
     ListAdapter<ChatMessage, ChatMessageAdapter.MessageViewHolder>(MessageDiffCallback()) {

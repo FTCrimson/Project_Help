@@ -1,4 +1,4 @@
-package com.example.project_helper.features.auth.fragments
+package com.example.project_helper.features.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -16,10 +16,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.project_helper.R
+import com.example.project_helper.data.api.deepseek.ChatCompletionRequest
 import com.example.project_helper.data.api.deepseek.DeepSeekApiClient
 import com.example.project_helper.data.api.deepseek.Message
 import com.example.project_helper.data.auth.RoleSelection
-import com.example.project_helper.data.auth.api.deepseek.ChatCompletionRequest
 import com.example.project_helper.databinding.FragmentNeuroChatBinding
 import com.example.project_helper.features.neurochat.MessageAdapter
 import features.viewmodel.ProfileViewModel
