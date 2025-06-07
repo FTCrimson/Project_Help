@@ -1,29 +1,34 @@
 package com.example.project_helper.features.auth.fragments
 
 import android.os.Bundle
-import com.example.project_helper.features.neurochat.MessageAdapter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.project_helper.R
 import com.example.project_helper.data.api.deepseek.DeepSeekApiClient
 import com.example.project_helper.data.api.deepseek.Message
 import com.example.project_helper.data.auth.RoleSelection
+import com.example.project_helper.data.auth.api.deepseek.ChatCompletionRequest
 import com.example.project_helper.databinding.FragmentNeuroChatBinding
+import com.example.project_helper.features.neurochat.MessageAdapter
+import features.viewmodel.ProfileViewModel
 import io.noties.markwon.Markwon
 import io.noties.markwon.html.HtmlPlugin
 import io.noties.markwon.linkify.LinkifyPlugin
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import android.util.Log
-import android.widget.Toast
-import com.example.project_helper.data.auth.api.deepseek.ChatCompletionRequest
-import features.viewmodel.ProfileViewModel
 import java.util.Date
 
 class NeuroChatFragment : Fragment() {
@@ -41,6 +46,13 @@ class NeuroChatFragment : Fragment() {
     private val DEEPSEEK_MODEL = "deepseek/deepseek-chat-v3-0324:free"
 
     private val TAG = "NeuroChatFragment"
+
+    private var isDrawerOpen = false
+
+    // Добавлены ссылки на элементы выдвижной панели
+    private lateinit var drawerContainer: ConstraintLayout
+    private lateinit var drawerPanel: View
+    private lateinit var drawerOverlay: View
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -91,6 +103,78 @@ class NeuroChatFragment : Fragment() {
                 false
             }
         }
+
+        initDrawer()
+    }
+
+    private fun initDrawer() {
+        val menuButton: ImageButton = binding.root.findViewById(R.id.Menu)
+        drawerContainer = binding.root.findViewById(R.id.drawerContainer)
+        drawerOverlay = binding.root.findViewById(R.id.drawerOverlay)
+        drawerPanel = binding.root.findViewById(R.id.drawerPanel)
+        val aiChatButton = binding.root.findViewById<Button>(R.id.aiChatButton)
+        val commandChatButton = binding.root.findViewById<Button>(R.id.commandChatButton)
+
+        menuButton.setOnClickListener {
+            if (isDrawerOpen) {
+                closeDrawer()
+            } else {
+                openDrawer()
+            }
+        }
+
+        drawerOverlay.setOnClickListener {
+            closeDrawer()
+        }
+
+        aiChatButton.setOnClickListener {
+            closeDrawer()
+        }
+
+        commandChatButton.setOnClickListener {
+            closeDrawer()
+            findNavController().navigate(R.id.action_NeuroChatFragment_to_CommandChatFragment)
+        }
+    }
+
+    private fun openDrawer() {
+        if (isDrawerOpen) return
+
+        isDrawerOpen = true
+        drawerContainer.visibility = View.VISIBLE
+
+        // Анимация затемнения
+        drawerOverlay.animate()
+            .alpha(1f)
+            .setDuration(300)
+            .start()
+
+        // Анимация выезжания панели
+        drawerPanel.animate()
+            .translationX(0f)
+            .setDuration(300)
+            .start()
+    }
+
+    private fun closeDrawer() {
+        if (!isDrawerOpen) return
+
+        isDrawerOpen = false
+
+        // Анимация скрытия затемнения
+        drawerOverlay.animate()
+            .alpha(0f)
+            .setDuration(300)
+            .start()
+
+        // Анимация скрытия панели
+        drawerPanel.animate()
+            .translationX(-280f)
+            .setDuration(300)
+            .withEndAction {
+                drawerContainer.visibility = View.GONE
+            }
+            .start()
     }
 
     private fun sendInitialPrompt() {

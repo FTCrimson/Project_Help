@@ -8,7 +8,6 @@
     android:background="@drawable/bg_neuro_gradient"
     android:padding="8dp">
 
-    <!-- Перемещен в конец для правильного z-индекса -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -24,12 +23,13 @@
             android:layout_height="40dp"
             android:background='@android:color/transparent'
             android:src="@drawable/ic_menu"
+            android:contentDescription="Открыть меню"
             app:tint="#6A5ACD" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Project Helper"
+            android:text="Command Chat"
             android:textSize="20sp"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
@@ -38,96 +38,60 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatRecyclerView"
+        android:id="@+id/chatsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="8dp"
         app:layout_constraintTop_toBottomOf="@id/header"
-        app:layout_constraintBottom_toTopOf="@id/inputLayout"
-        tools:listitem="@layout/item_message"/>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/inputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:cardBackgroundColor="#1E1B24"
-        app:cardCornerRadius="24dp"
-        app:strokeColor="#454059"
-        app:strokeWidth="1dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <EditText
-                android:id="@+id/messageInput"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:hint="Спроси нейросеть..."
-                android:textColor="#FFFFFF"
-                android:textColorHint="#A0A0A0"
-                android:background="@null"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:maxLines="3"/>
-
-            <ImageView
-                android:id="@+id/sendButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_send"
-                android:background="?selectableItemBackgroundBorderless"
-                android:contentDescription="Отправить"
-                app:tint="#7E5BFF" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+        app:layout_constraintBottom_toTopOf="@id/createChatButton"
+        tools:listitem="@layout/item_chat"/>
 
     <LinearLayout
-        android:id="@+id/typingIndicator"
+        android:id="@+id/emptyState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_typing_indicator"
-        android:paddingVertical="8dp"
-        android:paddingHorizontal="16dp"
+        android:orientation="vertical"
+        android:gravity="center"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/inputLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp">
+        app:layout_constraintTop_toTopOf="@id/chatsRecyclerView"
+        app:layout_constraintBottom_toBottomOf="@id/chatsRecyclerView"
+        app:layout_constraintStart_toStartOf="@id/chatsRecyclerView"
+        app:layout_constraintEnd_toEndOf="@id/chatsRecyclerView">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Нейросеть печатает..."
-            android:textColor="#B0B0FF"
-            android:textSize="12sp"/>
+            android:text="У вас пока нет чатов."
+            android:textColor="#CCCCCC"
+            android:textSize="18sp"/>
 
-        <ProgressBar
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="8dp"
-            android:indeterminateTint="#B0B0FF"
-            android:indeterminate="true"/>
+        <Button
+            android:id="@+id/createFirstChatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Создать первый чат"/>
     </LinearLayout>
 
-    <!-- КОНТЕЙНЕР ПАНЕЛИ ПЕРЕМЕЩЕН В КОНЕЦ ДЛЯ ПРАВИЛЬНОГО Z-ИНДЕКСА -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/drawerContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Затемнение фона -->
+    <Button
+        android:id="@+id/createChatButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Создать новый чат"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/drawerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
         <View
             android:id="@+id/drawerOverlay"
             android:layout_width="match_parent"
@@ -141,10 +105,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Сама выдвижная панель -->
         <LinearLayout
             android:id="@+id/drawerPanel"
-            android:layout_width="280dp"
+            android:layout_width="@dimen/drawer_panel_width"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:background="#1E1B24"
@@ -152,7 +115,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:translationX="-280dp">
+            android:translationX="@dimen/drawer_panel_width">
 
             <Button
                 android:id="@+id/aiChatButton"
@@ -189,4 +152,5 @@
                 style="@style/TextAppearance.AppCompat.Widget.Button"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

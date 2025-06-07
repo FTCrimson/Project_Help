@@ -101,6 +101,32 @@
     <fragment
         android:id="@+id/NeuroChatFragment"
         android:name="com.example.project_helper.features.auth.fragments.NeuroChatFragment"
-        android:label="Profile"/>
+        android:label="NeuroChatFragment">
+
+        <action
+            android:id="@+id/action_NeuroChatFragment_to_CommandChatFragment"
+            app:destination="@id/CommandChatFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/CommandChatFragment"
+        android:name="com.example.project_helper.features.fragments.CommandChatFragment"
+        android:label="CommandChatFragment">
+
+        <action
+            android:id="@+id/action_CommandChatFragment_to_NeuroChatFragment"
+            app:destination="@id/NeuroChatFragment" />
+
+        <action
+            android:id="@+id/action_CommandChatFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/ChatFragment"
+        android:name="com.example.project_helper.features.fragments.ChatFragment"
+        android:label="ChatFragment"/>
 
 </navigation>

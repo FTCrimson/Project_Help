@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+
+    <!-- Линия 1 (верхняя) -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M10,14 L30,14 L30,16 L10,16 Z"/>
+
+    <!-- Линия 2 (средняя) -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M10,20 L30,20 L30,22 L10,22 Z"/>
+
+    <!-- Линия 3 (нижняя) -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M10,26 L30,26 L30,28 L10,28 Z"/>
+</vector>

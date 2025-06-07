@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_neuro_gradient"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/chatTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Chat Title"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+
+        <ImageButton
+            android:id="@+id/addMemberButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_send"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="Добавить участника"
+            app:tint="#FFFFFF" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/emptyStateTextView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="Нет сообщений\nНачните общение первым!"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintBottom_toTopOf="@id/inputLayout"/>
+
+    <LinearLayout
+        android:id="@+id/accessDeniedView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintBottom_toTopOf="@id/inputLayout">
+
+        <TextView
+            android:id="@+id/accessDeniedTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Нет доступа к чату"
+            android:textColor="#FF0000"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/requestAccessButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Запросить доступ"
+            android:backgroundTint="#7E5BFF"/>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messagesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintBottom_toTopOf="@id/inputLayout"
+        tools:listitem="@layout/item_message"/>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/inputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:cardBackgroundColor="#1E1B24"
+        app:cardCornerRadius="24dp"
+        app:strokeColor="#454059"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <EditText
+                android:id="@+id/messageInput"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:hint="Введите сообщение..."
+                android:textColor="#FFFFFF"
+                android:textColorHint="#A0A0A0"
+                android:background="@null"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:maxLines="3"/>
+
+            <ImageView
+                android:id="@+id/sendButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_send"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="Отправить"
+                app:tint="#7E5BFF" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

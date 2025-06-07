@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 object DeepSeekApiClient {
 
-    private const val DEEPSEEK_API_KEY = "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" // <-- ЗАМЕНИТЕ НА СВОЙ API КЛЮЧ!
+    private const val DEEPSEEK_API_KEY = "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" // <-- ЗАМЕНИТЕ НА СВОЙ API КЛЮЧ!
 
     private const val BASE_URL = "https://openrouter.ai/api/v1/"
 
