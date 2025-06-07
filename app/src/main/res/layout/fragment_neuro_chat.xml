@@ -8,7 +8,6 @@
     android:background="@drawable/bg_neuro_gradient"
     android:padding="8dp">
 
-    <!-- Перемещен в конец для правильного z-индекса -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"

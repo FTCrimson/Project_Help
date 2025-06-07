@@ -215,7 +215,7 @@ class CommandChatFragment : Fragment() {
                 }
 
                 val user = documents.documents[0].toObject(User::class.java)
-                user?.let { // <- Здесь 'it' это User объект, полученный из Firestore
+                user?.let {
                     if (chat.members.contains(it.id)) {
                         Toast.makeText(requireContext(), "${username} is already a member", Toast.LENGTH_SHORT).show()
                         return@addOnSuccessListener

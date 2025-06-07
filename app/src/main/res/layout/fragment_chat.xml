@@ -8,6 +8,7 @@
     android:background="@drawable/bg_neuro_gradient"
     android:padding="8dp">
 
+    <!-- Заголовок чата -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -16,6 +17,15 @@
         android:gravity="center_vertical"
         android:padding="16dp"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/menuButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_menu"
+            android:contentDescription="Меню"
+            app:tint="#FFFFFF"
+            android:layout_marginEnd="8dp"/>
 
         <TextView
             android:id="@+id/chatTitle"
@@ -33,12 +43,12 @@
             android:id="@+id/addMemberButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_send"
-            android:background="?selectableItemBackgroundBorderless"
+            android:background="@drawable/ic_add"
             android:contentDescription="Добавить участника"
             app:tint="#FFFFFF" />
     </LinearLayout>
 
+    <!-- Контент чата -->
     <TextView
         android:id="@+id/emptyStateTextView"
         android:layout_width="match_parent"
@@ -128,5 +138,114 @@
                 app:tint="#7E5BFF" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
+
+    <!-- Выдвижная панель -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/drawerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Затемнение фона -->
+        <View
+            android:id="@+id/drawerOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"
+            android:alpha="0"
+            android:visibility="visible"
+            android:clickable="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Сама выдвижная панель -->
+        <LinearLayout
+            android:id="@+id/drawerPanel"
+            android:layout_width="280dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="#1E1B24"
+            android:paddingTop="24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:translationX="-280dp">
+
+            <!-- Добавим раздел управления чатом -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Управление чатом"
+                android:textColor="#A0A0A0"
+                android:textSize="14sp"
+                android:paddingStart="24dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"/>
+
+            <Button
+                android:id="@+id/btnEditChatName"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Изменить название"
+                android:textColor="#FFFFFF"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:textSize="18sp"
+                android:drawablePadding="16dp"
+                android:gravity="start|center_vertical"
+                android:paddingStart="24dp"
+                android:drawableStart="@drawable/ic_edit"
+                style="@style/TextAppearance.AppCompat.Widget.Button"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#454059"
+                android:layout_marginVertical="8dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Тип чата"
+                android:textColor="#A0A0A0"
+                android:textSize="14sp"
+                android:paddingStart="24dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"/>
+
+            <Button
+                android:id="@+id/aiChatButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="AI Chat"
+                android:textColor="#FFFFFF"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:textSize="18sp"
+                android:drawablePadding="16dp"
+                android:gravity="start|center_vertical"
+                android:paddingStart="24dp"
+                android:drawableStart="@drawable/ic_ai"
+                style="@style/TextAppearance.AppCompat.Widget.Button"/>
+
+            <Button
+                android:id="@+id/commandChatButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Command Chat"
+                android:textColor="#FFFFFF"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:textSize="18sp"
+                android:drawablePadding="16dp"
+                android:gravity="start|center_vertical"
+                android:paddingStart="24dp"
+                android:drawableStart="@drawable/ic_command"
+                style="@style/TextAppearance.AppCompat.Widget.Button"/>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -552,19 +552,15 @@ class CombinationsFragment : Fragment() {
         val newWordsButton = view.findViewById<Button>(R.id.newWordsButton)
         val aiHelpButton = view.findViewById<Button>(R.id.aiHelpButton)
 
-        // Начальная анимация появления
         wordsCard.alpha = 0f
         wordsCard.animate()
             .alpha(1f)
             .setDuration(800)
             .start()
 
-        // Показать случайные слова
         showRandomWordsWithAnimation()
 
-        // Обработчик кнопки новых слов
         newWordsButton.setOnClickListener {
-            // Анимация нажатия
             it.animate()
                 .scaleX(0.95f)
                 .scaleY(0.95f)
@@ -580,9 +576,7 @@ class CombinationsFragment : Fragment() {
                 .start()
         }
 
-        // Обработчик кнопки AI Help
         aiHelpButton.setOnClickListener {
-            // Эффект пульсации перед переходом
             val scale = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 1.05f)
             val alpha = PropertyValuesHolder.ofFloat(View.ALPHA, 1f, 0.8f)
             ObjectAnimator.ofPropertyValuesHolder(it, scale, alpha).apply {
@@ -592,7 +586,6 @@ class CombinationsFragment : Fragment() {
                 start()
             }
 
-            // Задержка для завершения анимации перед переходом
             it.postDelayed({
                 findNavController().navigate(R.id.action_CombinationsFragment_to_NeuroChatFragment)
             }, 500)
@@ -600,19 +593,16 @@ class CombinationsFragment : Fragment() {
     }
 
     private fun showRandomWordsWithAnimation() {
-        // Анимация исчезновения
         wordsCard.animate()
             .alpha(0.2f)
             .scaleX(0.9f)
             .scaleY(0.9f)
             .setDuration(300)
             .withEndAction {
-                // Обновление слов
                 val randomPair = wordPairs.random()
                 word1TextView.text = randomPair.first
                 word2TextView.text = randomPair.second
 
-                // Анимация появления с эффектом "пружины"
                 wordsCard.animate()
                     .alpha(1f)
                     .scaleX(1f)
@@ -621,7 +611,6 @@ class CombinationsFragment : Fragment() {
                     .setInterpolator(OvershootInterpolator())
                     .start()
 
-                // Анимация цвета текста
                 animateTextColor(word1TextView, Color.parseColor("#00FFFF"))
                 animateTextColor(word2TextView, Color.parseColor("#FF00FF"))
             }

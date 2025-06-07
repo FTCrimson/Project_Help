@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.project_helper.data.api.deepseek.Message // Используем класс Message из пакета API
+import com.example.project_helper.data.api.deepseek.Message
 import com.example.project_helper.databinding.ItemMessageBinding
 import io.noties.markwon.Markwon
 import java.text.SimpleDateFormat
