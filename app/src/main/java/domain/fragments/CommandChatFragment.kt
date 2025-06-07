@@ -1,4 +1,4 @@
-package com.example.project_helper.features.fragments
+package com.example.project_helper.domain.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,14 +15,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.project_helper.R
 import com.example.project_helper.databinding.FragmentCommandChatBinding
-import com.example.project_helper.features.commandchat.ChatAdapter
-import com.example.project_helper.features.commandchat.CommandChatViewModel
+import com.example.project_helper.domain.commandchat.ChatAdapter
+import com.example.project_helper.presentation.viewmodel.commandchat.CommandChatViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import data.commandchat.Chat
-import data.commandchat.User
+import data.commandchat_api.Chat
+import data.commandchat_api.User
 
 class CommandChatFragment : Fragment() {
 

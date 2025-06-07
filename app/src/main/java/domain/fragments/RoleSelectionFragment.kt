@@ -1,4 +1,4 @@
-package com.example.project_helper.features.fragments
+package com.example.project_helper.domain.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.project_helper.R
 import com.example.project_helper.data.auth.RoleSelection
 import com.example.project_helper.databinding.FragmentRoleSelectionBinding
-import features.viewmodel.ProfileViewModel
+import presentation.viewmodel.ProfileViewModel
 
 class RoleSelectionFragment : Fragment() {
 

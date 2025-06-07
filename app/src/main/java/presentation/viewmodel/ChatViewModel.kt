@@ -1,4 +1,4 @@
-package com.example.project_helper.features.commandchat
+package com.example.project_helper.presentation.viewmodel.commandchat
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.project_helper.data.repository.ChatRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
-import data.commandchat.Chat
-import data.commandchat.ChatMessage
+import data.commandchat_api.Chat
+import data.commandchat_api.ChatMessage
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged

@@ -1,4 +1,4 @@
-package com.example.project_helper.features.commandchat
+package com.example.project_helper.presentation.viewmodel.commandchat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

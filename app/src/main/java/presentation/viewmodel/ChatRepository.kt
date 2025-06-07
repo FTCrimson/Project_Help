@@ -6,9 +6,9 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import data.commandchat.Chat
-import data.commandchat.ChatMessage
-import data.commandchat.User
+import data.commandchat_api.Chat
+import data.commandchat_api.ChatMessage
+import data.commandchat_api.User
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

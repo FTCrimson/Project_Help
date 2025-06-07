@@ -1,4 +1,4 @@
-package com.example.project_helper.features.fragments
+package com.example.project_helper.domain.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -21,8 +21,8 @@ import com.example.project_helper.data.api.deepseek.DeepSeekApiClient
 import com.example.project_helper.data.api.deepseek.Message
 import com.example.project_helper.data.auth.RoleSelection
 import com.example.project_helper.databinding.FragmentNeuroChatBinding
-import com.example.project_helper.features.neurochat.MessageAdapter
-import features.viewmodel.ProfileViewModel
+import com.example.project_helper.domain.neurochat.MessageAdapter
+import presentation.viewmodel.ProfileViewModel
 import io.noties.markwon.Markwon
 import io.noties.markwon.html.HtmlPlugin
 import io.noties.markwon.linkify.LinkifyPlugin

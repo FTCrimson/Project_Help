@@ -1,4 +1,4 @@
-package com.example.project_helper.features.profile
+package com.example.project_helper.domain.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater

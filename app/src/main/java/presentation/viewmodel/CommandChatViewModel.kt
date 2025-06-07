@@ -1,4 +1,4 @@
-package com.example.project_helper.features.commandchat
+package com.example.project_helper.presentation.viewmodel.commandchat
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,7 @@ import com.example.project_helper.utils.FirebaseUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import data.commandchat.Chat
+import data.commandchat_api.Chat
 import java.util.Date
 
 class CommandChatViewModel : ViewModel() {

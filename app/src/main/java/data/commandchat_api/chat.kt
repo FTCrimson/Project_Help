@@ -1,4 +1,4 @@
-package data.commandchat
+package data.commandchat_api
 
 import java.util.Date
 

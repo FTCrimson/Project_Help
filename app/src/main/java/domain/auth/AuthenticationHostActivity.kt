@@ -1,9 +1,9 @@
-package com.example.project_helper.features.auth
+package com.example.project_helper.domain.auth
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.project_helper.R
-import com.example.project_helper.features.fragments.LoginFragment
+import com.example.project_helper.domain.fragments.LoginFragment
 
 class AuthenticationHostActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

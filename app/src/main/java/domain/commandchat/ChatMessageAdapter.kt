@@ -1,4 +1,4 @@
-package com.example.project_helper.features.commandchat
+package com.example.project_helper.domain.commandchat
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.project_helper.R
-import data.commandchat.ChatMessage
+import data.commandchat_api.ChatMessage
 
 class ChatMessageAdapter(private val currentUserId: String) :
     ListAdapter<ChatMessage, ChatMessageAdapter.MessageViewHolder>(MessageDiffCallback()) {

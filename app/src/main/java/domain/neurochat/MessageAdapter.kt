@@ -1,4 +1,4 @@
-package com.example.project_helper.features.neurochat
+package com.example.project_helper.domain.neurochat
 
 import android.content.Context
 import android.view.LayoutInflater

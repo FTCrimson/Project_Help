@@ -1,4 +1,4 @@
-package com.example.project_helper.features.fragments
+package com.example.project_helper.domain.fragments
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
@@ -13,11 +13,11 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.project_helper.R
-import com.example.project_helper.data.repository.ChatRepository // Import ChatRepository
+import com.example.project_helper.data.repository.ChatRepository
 import com.example.project_helper.databinding.FragmentChatBinding
-import com.example.project_helper.features.commandchat.ChatMessageAdapter
-import com.example.project_helper.features.commandchat.ChatViewModel
-import com.example.project_helper.features.commandchat.ChatViewModelFactory // Import ChatViewModelFactory
+import com.example.project_helper.domain.commandchat.ChatMessageAdapter
+import com.example.project_helper.presentation.viewmodel.commandchat.ChatViewModel
+import com.example.project_helper.presentation.viewmodel.commandchat.ChatViewModelFactory
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 
@@ -26,7 +26,6 @@ class ChatFragment : Fragment() {
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
 
-    // Используем ViewModelFactory для создания ViewModel с ChatRepository
     private val viewModel: ChatViewModel by viewModels {
         ChatViewModelFactory(ChatRepository())
     }

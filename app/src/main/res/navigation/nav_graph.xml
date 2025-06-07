@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.project_helper.features.fragments.LoginFragment"
+        android:name="com.example.project_helper.domain.fragments.LoginFragment"
         android:label="Login">
 
         <action
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.project_helper.features.fragments.RegisterFragment"
+        android:name="com.example.project_helper.domain.fragments.RegisterFragment"
         android:label="Register">
 
         <action
@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.project_helper.features.profile.ProfileFragment"
+        android:name="com.example.project_helper.domain.profile.ProfileFragment"
         android:label="Profile">
 
         <action
@@ -56,7 +56,7 @@
 
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.example.project_helper.features.profile.EditProfileFragment"
+        android:name="com.example.project_helper.domain.profile.EditProfileFragment"
         android:label="Edit Profile">
 
         <action
@@ -67,7 +67,7 @@
 
     <fragment
         android:id="@+id/roleSelectionFragment"
-        android:name="com.example.project_helper.features.fragments.RoleSelectionFragment"
+        android:name="com.example.project_helper.domain.fragments.RoleSelectionFragment"
         android:label="RoleSelectionFragment">
 
         <action
@@ -78,7 +78,7 @@
 
     <fragment
         android:id="@+id/BrainStormFragment"
-        android:name="com.example.project_helper.features.fragments.BrainStormFragment"
+        android:name="com.example.project_helper.domain.fragments.BrainStormFragment"
         android:label="BrainStormFragment">
 
         <action
@@ -89,7 +89,7 @@
 
     <fragment
         android:id="@+id/CombinationsFragment"
-        android:name="com.example.project_helper.features.fragments.CombinationsFragment"
+        android:name="com.example.project_helper.domain.fragments.CombinationsFragment"
         android:label="CombinationsFragment">
 
         <action
@@ -100,7 +100,7 @@
 
     <fragment
         android:id="@+id/NeuroChatFragment"
-        android:name="com.example.project_helper.features.fragments.NeuroChatFragment"
+        android:name="com.example.project_helper.domain.fragments.NeuroChatFragment"
         android:label="NeuroChatFragment">
 
         <action
@@ -111,7 +111,7 @@
 
     <fragment
         android:id="@+id/CommandChatFragment"
-        android:name="com.example.project_helper.features.fragments.CommandChatFragment"
+        android:name="com.example.project_helper.domain.fragments.CommandChatFragment"
         android:label="CommandChatFragment">
 
         <action
@@ -126,7 +126,7 @@
 
     <fragment
         android:id="@+id/ChatFragment"
-        android:name="com.example.project_helper.features.fragments.ChatFragment"
+        android:name="com.example.project_helper.domain.fragments.ChatFragment"
         android:label="ChatFragment">
 
         <action

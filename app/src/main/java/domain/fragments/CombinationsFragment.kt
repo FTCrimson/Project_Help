@@ -1,4 +1,4 @@
-package com.example.project_helper.features.fragments
+package com.example.project_helper.domain.fragments
 
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
