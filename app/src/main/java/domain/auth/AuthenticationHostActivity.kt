@@ -1,4 +1,4 @@
-package com.example.project_helper.domain.auth
+package com.example.project_helper.features.auth
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
