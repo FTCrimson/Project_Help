@@ -25,11 +25,7 @@ class BrainStormFragment : Fragment() {
         }
 
         view.findViewById<View>(R.id.button2).setOnClickListener {
-            // Ничего не происходит
-        }
-
-        view.findViewById<View>(R.id.button3).setOnClickListener {
-            // Ничего не происходит
+            findNavController().navigate(R.id.action_BrainStormFragment_to_InfoFragment)
         }
 
         view.findViewById<View>(R.id.buttonCombinations).setOnClickListener {

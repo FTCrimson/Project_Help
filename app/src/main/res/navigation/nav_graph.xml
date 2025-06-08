@@ -89,6 +89,10 @@
             android:id="@+id/action_BrainStormFragment_to_CombinationsFragment"
             app:destination="@id/CombinationsFragment" />
 
+        <action
+            android:id="@+id/action_BrainStormFragment_to_InfoFragment"
+            app:destination="@id/InfoFragment" />
+
     </fragment>
 
     <fragment
@@ -101,8 +105,8 @@
             app:destination="@id/NeuroChatFragment" />
 
         <action
-            android:id="@+id/action_CombinationsFragment_to_InfoFragment"
-            app:destination="@id/InfoFragment" />
+            android:id="@+id/action_CombinationsFragment_to_CommandChatFragment"
+            app:destination="@id/CommandChatFragment" />
 
     </fragment>
 

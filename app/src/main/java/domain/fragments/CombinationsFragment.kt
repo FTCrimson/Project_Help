@@ -553,8 +553,8 @@ class CombinationsFragment : Fragment() {
         word2TextView = view.findViewById(R.id.word2TextView)
         wordsCard = view.findViewById(R.id.wordsCard)
         val newWordsButton = view.findViewById<Button>(R.id.newWordsButton)
-        val InformationButton = view.findViewById<Button>(R.id.InformationButton)
         val aiHelpButton = view.findViewById<Button>(R.id.aiHelpButton)
+        val CommandChatButton = view.findViewById<Button>(R.id.CommandChatButton)
 
         wordsCard.alpha = 0f
         wordsCard.animate()
@@ -580,8 +580,8 @@ class CombinationsFragment : Fragment() {
                 .start()
         }
 
-        InformationButton.setOnClickListener {
-            findNavController().navigate(R.id.action_CombinationsFragment_to_InfoFragment)
+        CommandChatButton.setOnClickListener {
+            findNavController().navigate(R.id.action_CombinationsFragment_to_CommandChatFragment)
         }
 
         aiHelpButton.setOnClickListener {

@@ -111,8 +111,6 @@ class NeuroChatFragment : Fragment() {
         drawerContainer = binding.root.findViewById(R.id.drawerContainer)
         drawerOverlay = binding.root.findViewById(R.id.drawerOverlay)
         drawerPanel = binding.root.findViewById(R.id.drawerPanel)
-        val aiChatButton = binding.root.findViewById<Button>(R.id.aiChatButton)
-        val commandChatButton = binding.root.findViewById<Button>(R.id.commandChatButton)
 
         menuButton.setOnClickListener {
             if (isDrawerOpen) {
