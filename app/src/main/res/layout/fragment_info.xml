@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#FFF8F0">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Заголовок -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Полное руководство по созданию проекта"
+            android:textSize="24sp"
+            android:textColor="#333"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="16dp"/>
+
+        <!-- Этап 1 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. Генерация прорывной идеи"
+            android:textSize="20sp"
+            android:textColor="#E64A19"
+            android:textStyle="bold"
+            android:paddingTop="24dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Техника случайных комбинаций:\nВозьмите 2 несвязанных слова (например, 'Библиотека' + 'Такси'). Ищите неочевидные связи: 'Мобильная библиотека с доставкой книг на дом через приложение'.\n\n• SCAMPER-метод:\nЗадайте 7 вопросов: Заменить? Комбинировать? Адаптировать? Изменить? Применить иначе? Убрать? Перевернуть?\n\n• Пример реализации:\nПроект 'Plantify' (Растения + Spotify) - умные горшки, изменяющие освещение и полив под музыку, которую слушает растение."
+            android:textSize="16sp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingTop="8dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_image_generations"
+            android:contentDescription="Генерация идей"
+            android:background="#E1F5FE"/>
+
+        <!-- Этап 2 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2. Валидация проблемы"
+            android:textSize="20sp"
+            android:textColor="#E64A19"
+            android:textStyle="bold"
+            android:paddingTop="32dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Формула проблемы:\n'[Группа людей] испытывает [проблема] при [ситуация], что приводит к [последствия]'.\nПример: 'Студенты тратят 40% времени на поиск релевантных материалов для проектов, что снижает качество работ'.\n\n• Методы исследования:\n- Интервью с 10+ представителями ЦА\n- Онлайн-опросы (Google Forms)\n- Анализ форумов и соц. сетей\n- Данные App Annie для мобильных решений\n\n• Ошибки валидации:\nСубъективные предположения без данных, слишком широкая ЦА, игнорирование существующих решений."
+            android:textSize="16sp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingTop="8dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_problem_analysis"
+            android:contentDescription="Анализ проблемы"
+            android:background="#F1F8E9"/>
+
+        <!-- Этап 3 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3. Прототипирование MVP"
+            android:textSize="20sp"
+            android:textColor="#E64A19"
+            android:textStyle="bold"
+            android:paddingTop="32dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Правило 72 часов:\nСоздайте работающий прототип за 3 дня используя:\n- Figma для дизайна\n- Google Sites для лендинга\n- No-code инструменты (Bubble, Adalo)\n\n• Компоненты MVP:\n1. Одна ключевая функция\n2. Механизм сбора обратной связи\n3. Минимальный юнит-экономики\n\n• Пример: Приложение для поиска напарников в спортзал. MVP: только поиск по локации без профилей и чатов. Тестирование через Telegram-бот."
+            android:textSize="16sp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingTop="8dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_prototyping"
+            android:contentDescription="Создание прототипа"
+            android:background="#FFF3E0"/>
+
+        <!-- Этап 4 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="4. Построение бизнес-модели"
+            android:textSize="20sp"
+            android:textColor="#E64A19"
+            android:textStyle="bold"
+            android:paddingTop="32dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Canvas-модель:\nЗаполните 9 блоков:\n1. Потребительские сегменты\n2. Ценностное предложение\n3. Каналы сбыта\n4. Взаимоотношения с клиентами\n5. Потоки доходов\n6. Ключевые ресурсы\n7. Ключевые виды деятельности\n8. Ключевые партнеры\n9. Структура издержек\n\n• Финансовые метрики стартапа:\n- CAC (Customer Acquisition Cost)\n- LTV (Lifetime Value)\n- Коэффициент окупаемости (LTV:CAC)\n- Burn Rate\n\n• Пример монетизации:\nFreemium модель с ограничением 3 проектов в бесплатной версии и подпиской за $5/мес."
+            android:textSize="16sp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingTop="8dp"/>
+
+        <!-- Этап 5 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="5. Создание презентации проекта"
+            android:textSize="20sp"
+            android:textColor="#E64A19"
+            android:textStyle="bold"
+            android:paddingTop="32dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Структура питч-дека:\n1. Титульный слайд (название, лого)\n2. Проблема (3 боли клиентов)\n3. Решение (скриншоты продукта)\n4. Трафик и метрики (если есть)\n5. Бизнес-модель (как зарабатываем)\n6. Команда (роли и экспертиза)\n7. Конкуренты (матрица сравнения)\n8. Финансовые прогнозы на 2 года\n9. Запрос (инвестиции/ресурсы)\n\n• Визуальные правила:\n- 1 слайд = 1 идея\n- Минимум текста, максимум визуалов\n- Контрастные цвета\n- 3D модели продукта\n\n• Ресурсы: Canva, Pitch.com, SlidesGo"
+            android:textSize="16sp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingTop="8dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_presentation"
+            android:contentDescription="Презентация проекта"
+            android:background="#E8F5E9"/>
+
+        <!-- Этап 6 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="6. Поиск команды и ресурсов"
+            android:textSize="20sp"
+            android:textColor="#E64A19"
+            android:textStyle="bold"
+            android:paddingTop="32dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Где искать команду:\n- Хакатоны и стартап-уикенды\n- Tinder для стартапов (CoFoundersLab)\n- Студенческие клубы (Enactus)\n- Профильные Telegram-чаты\n\n• Бесплатные ресурсы:\n- Google Cloud Credits ($2000 для стартапов)\n- Figma Education\n- GitHub Student Pack\n- Notion для стартапов\n\n• Гранты и конкурсы:\n1. Фонд Сколково\n2. StartTrack\n3. ВИН РСМ\n4. Акселераторы 500 Startups, Y Combinator\n\n• Ключевые роли в команде:\n- Технический лидер (full-stack)\n- Продакт-менеджер\n- Маркетинг-специалист\n- Дизайнер UX/UI"
+            android:textSize="16sp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingTop="8dp"/>
+
+        <!-- Этап 7 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="7. Техническая реализация"
+            android:textSize="20sp"
+            android:textColor="#E64A19"
+            android:textStyle="bold"
+            android:paddingTop="32dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Выбор стека технологий:\n- Мобильное приложение: React Native + Firebase\n- Веб-сервис: MERN (MongoDB, Express, React, Node.js)\n- AI-проекты: Python + TensorFlow Lite\n\n• No-code решение:\n- Мобильные приложения: Adalo, Glide\n- Веб-платформы: Bubble, Webflow\n- Автоматизация: Zapier, Make\n\n• DevOps для стартапа:\n- CI/CD: GitHub Actions\n- Мониторинг: Sentry\n- Развертывание: Docker + AWS Elastic Beanstalk\n\n• Пример архитектуры:\nПользователь → Cloudflare CDN → Firebase Auth → Node.js API → MongoDB Atlas → AWS S3 (медиа)"
+            android:textSize="16sp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingTop="8dp"/>
+
+        <Button
+            android:id="@+id/btn_ai_help"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="32dp"
+            android:text="AI Помощник"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#000000"
+            android:drawableStart="@drawable/ic_ai"
+            android:drawablePadding="12dp"/>
+
+        <Button
+            android:id="@+id/btn_command_chat"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"
+            android:text="Чат с Командой"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#000000"
+            android:drawablePadding="12dp"/>
+
+    </LinearLayout>
+</ScrollView>

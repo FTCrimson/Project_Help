@@ -8,4 +8,6 @@
     <color name="note_blue">#B3E5FC</color>
     <color name="note_purple">#E1BEE7</color>
     <color name="note_orange">#FFCCBC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="teal_700">#FF018786</color>
 </resources>

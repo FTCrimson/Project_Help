@@ -533,7 +533,7 @@ class CombinationsFragment : Fragment() {
         "Эскимо" to "эхо",
         "Юбка" to "юла",
         "Яблоко" to "ягода"
-    )
+    ).shuffled()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -550,6 +550,7 @@ class CombinationsFragment : Fragment() {
         word2TextView = view.findViewById(R.id.word2TextView)
         wordsCard = view.findViewById(R.id.wordsCard)
         val newWordsButton = view.findViewById<Button>(R.id.newWordsButton)
+        val InformationButton = view.findViewById<Button>(R.id.InformationButton)
         val aiHelpButton = view.findViewById<Button>(R.id.aiHelpButton)
 
         wordsCard.alpha = 0f
@@ -574,6 +575,10 @@ class CombinationsFragment : Fragment() {
                     showRandomWordsWithAnimation()
                 }
                 .start()
+        }
+
+        InformationButton.setOnClickListener {
+            findNavController().navigate(R.id.action_CombinationsFragment_to_InfoFragment)
         }
 
         aiHelpButton.setOnClickListener {
