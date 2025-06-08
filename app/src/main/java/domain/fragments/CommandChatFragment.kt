@@ -84,6 +84,11 @@ class CommandChatFragment : Fragment() {
             }
         }
 
+        binding.ProfileButton.setOnClickListener {
+            findNavController().navigate(R.id.action_CommandChatFragment_to_ProfileFragment)
+            closeDrawer()
+        }
+
         binding.root.findViewById<Button>(R.id.commandChatButton).setOnClickListener {
             closeDrawer()
         }

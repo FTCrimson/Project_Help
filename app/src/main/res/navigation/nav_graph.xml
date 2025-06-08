@@ -52,6 +52,10 @@
             android:id="@+id/action_ProfileFragment_to_RoleSelectionFragment"
             app:destination="@id/roleSelectionFragment" />
 
+        <action
+            android:id="@+id/action_ProfileFragment_to_CommandChatFragment"
+            app:destination="@id/CommandChatFragment" />
+
     </fragment>
 
     <fragment
@@ -111,6 +115,10 @@
             android:id="@+id/action_NeuroChatFragment_to_CommandChatFragment"
             app:destination="@id/CommandChatFragment" />
 
+        <action
+            android:id="@+id/action_NeuroChatFragment_to_ProfileFragment"
+            app:destination="@id/profileFragment" />
+
     </fragment>
 
     <fragment
@@ -126,6 +134,10 @@
             android:id="@+id/action_CommandChatFragment_to_ChatFragment"
             app:destination="@id/ChatFragment" />
 
+        <action
+            android:id="@+id/action_CommandChatFragment_to_ProfileFragment"
+            app:destination="@id/profileFragment" />
+
     </fragment>
 
     <fragment
@@ -140,6 +152,10 @@
         <action
             android:id="@+id/action_ChatFragment_to_NeuroChatFragment"
             app:destination="@id/NeuroChatFragment" />
+
+        <action
+            android:id="@+id/action_ChatFragment_to_ProfileFragment"
+            app:destination="@id/profileFragment" />
 
     </fragment>
 

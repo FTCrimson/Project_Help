@@ -152,6 +152,12 @@ class ChatFragment : Fragment() {
             closeDrawer()
         }
 
+        binding.ProfileButton.setOnClickListener {
+            // Проверяем на null перед использованием findNavController
+            findNavController().navigate(R.id.action_ChatFragment_to_ProfileFragment)
+            closeDrawer()
+        }
+
         // Новая кнопка изменения названия в выдвижной панели
         binding.btnEditChatName.setOnClickListener {
             showEditChatNameDialog()

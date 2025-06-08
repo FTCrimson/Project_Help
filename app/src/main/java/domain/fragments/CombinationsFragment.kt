@@ -533,7 +533,10 @@ class CombinationsFragment : Fragment() {
         "Эскимо" to "эхо",
         "Юбка" to "юла",
         "Яблоко" to "ягода"
-    ).shuffled()
+    )
+
+    private val firstWords = wordPairs.map { it.first }.distinct()
+    private val secondWords = wordPairs.map { it.second }.distinct()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -604,9 +607,10 @@ class CombinationsFragment : Fragment() {
             .scaleY(0.9f)
             .setDuration(300)
             .withEndAction {
-                val randomPair = wordPairs.random()
-                word1TextView.text = randomPair.first
-                word2TextView.text = randomPair.second
+                val randomFirst = firstWords.random()
+                val randomSecond = secondWords.random()
+                word1TextView.text = randomFirst
+                word2TextView.text = randomSecond
 
                 wordsCard.animate()
                     .alpha(1f)

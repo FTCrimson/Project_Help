@@ -126,13 +126,18 @@ class NeuroChatFragment : Fragment() {
             closeDrawer()
         }
 
-        aiChatButton.setOnClickListener {
+        binding.aiChatButton.setOnClickListener {
             closeDrawer()
         }
 
-        commandChatButton.setOnClickListener {
+        binding.commandChatButton.setOnClickListener {
             closeDrawer()
             findNavController().navigate(R.id.action_NeuroChatFragment_to_CommandChatFragment)
+        }
+
+        binding.ProfileButton.setOnClickListener {
+            findNavController().navigate(R.id.action_NeuroChatFragment_to_ProfileFragment)
+            closeDrawer()
         }
     }
 

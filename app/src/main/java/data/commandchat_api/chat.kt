@@ -7,6 +7,6 @@ data class Chat(
     val name: String = "New Chat",
     val creatorId: String = "",
     val members: List<String> = emptyList(),
-    val createdAt: Date? = null, // Делаем Nullable на случай, если поле отсутствует
-    val lastMessageTimestamp: Date? = null // Делаем Nullable
+    val createdAt: Date? = null,
+    val lastMessageTimestamp: Date? = null
 )

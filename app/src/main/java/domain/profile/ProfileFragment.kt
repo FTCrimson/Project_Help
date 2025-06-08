@@ -48,6 +48,10 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_ProfileFragment_to_RoleSelectionFragment)
         }
 
+        binding.btnCommandChat.setOnClickListener {
+            findNavController().navigate(R.id.action_ProfileFragment_to_CommandChatFragment)
+        }
+
         binding.btnLogout.setOnClickListener {
             firebaseAuth.signOut()
             Toast.makeText(requireContext(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()

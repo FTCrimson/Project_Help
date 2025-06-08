@@ -157,5 +157,16 @@
             app:cornerRadius="8dp"
             app:iconGravity="start"
             app:iconTint="@color/white"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_command_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/black"
+            android:text="continue working"
+            app:cornerRadius="8dp"
+            app:iconGravity="start"
+            app:iconTint="@color/white"/>
     </LinearLayout>
 </ScrollView>

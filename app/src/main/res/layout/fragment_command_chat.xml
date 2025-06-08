@@ -150,6 +150,26 @@
                 android:paddingStart="24dp"
                 android:drawableStart="@drawable/ic_command"
                 style="@style/TextAppearance.AppCompat.Widget.Button"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#454059"
+                android:layout_marginVertical="8dp"/>
+
+            <Button
+                android:id="@+id/ProfileButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Profile"
+                android:textColor="#FFFFFF"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:textSize="18sp"
+                android:drawablePadding="16dp"
+                android:gravity="start|center_vertical"
+                android:paddingStart="24dp"
+                android:drawableStart="@drawable/ic_command"
+                style="@style/TextAppearance.AppCompat.Widget.Button"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
