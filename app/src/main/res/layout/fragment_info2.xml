@@ -1,13 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.project_helper.domain.fragments.InfoFragment2">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Помощь с тем как выявить и понять проблематику проекта"
+                android:textSize="24sp"
+                android:textColor="#333"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingBottom="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2. Выявление и анализ проблематики"
+                android:textSize="20sp"
+                android:textColor="#E64A19"
+                android:textStyle="bold"
+                android:paddingTop="24dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Метод '5 Почему?' :\nНачните с наблюдаемой проблемы (например, Клиенты уходят с сайта). Спросите Почему?. Получив ответ, спросите Почему? к нему. Повторяйте 5 раз, чтобы докопаться до корневой причины, а не решать только верхушку айсберга.\n\n• Карта Эмпатии :\nСоздайте профиль типичного пользователя. Что он видит? Что слышит? О чем думает и чувствует? Что говорит и делает? Каковы его боли и потребности? Это помогает глубоко понять мир пользователя и неочевидные аспекты его проблем.\n\n• Пример реализации :\nПроект 'FindMyStudy'. Проблематика, выявленная через изучение пользовательского пути и 5 Почему?: студентам сложно найти актуальную и структурированную информацию о доступных курсах и образовательных программах за пределами их основного учебного заведения. Существующие ресурсы разрознены, устарели, или требуют много времени на поиск. 'FindMyStudy' решает эту проблему, агрегируя данные с различных платформ и предоставляя единый поиск с фильтрами по интересам и расписанию.\n"
+                android:textSize="16sp"
+                android:lineSpacingMultiplier="1.2"
+                android:paddingTop="8dp"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="16dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/fms"
+                android:contentDescription="Анализ проблематики"
+                android:background="#E1F5FE"/>
+
+            <Button
+                android:id="@+id/btn_ai_help"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="32dp"
+                android:text="AI Помощник"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#000000"
+                android:drawableStart="@drawable/ic_ai"
+                android:drawablePadding="12dp"/>
+
+            <Button
+                android:id="@+id/btn_command_chat"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                android:text="Чат с Командой"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#000000"
+                android:drawablePadding="12dp"/>
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>
