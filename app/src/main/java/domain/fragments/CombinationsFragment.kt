@@ -21,6 +21,8 @@ class CombinationsFragment : Fragment() {
     private lateinit var word1TextView: TextView
     private lateinit var word2TextView: TextView
     private lateinit var wordsCard: CardView
+    private var lastWord1: String = ""
+    private var lastWord2: String = ""
     private val wordPairs = listOf(
         "Автобус" to "якорь",
         "Банкир" to "электростанция",
@@ -595,7 +597,14 @@ class CombinationsFragment : Fragment() {
             }
 
             it.postDelayed({
-                findNavController().navigate(R.id.action_CombinationsFragment_to_NeuroChatFragment)
+                val bundle = Bundle().apply {
+                    putString("word1", lastWord1)
+                    putString("word2", lastWord2)
+                }
+                findNavController().navigate(
+                    R.id.action_CombinationsFragment_to_NeuroChatFragment,
+                    bundle
+                )
             }, 500)
         }
     }
@@ -609,6 +618,10 @@ class CombinationsFragment : Fragment() {
             .withEndAction {
                 val randomFirst = firstWords.random()
                 val randomSecond = secondWords.random()
+
+                lastWord1 = randomFirst
+                lastWord2 = randomSecond
+
                 word1TextView.text = randomFirst
                 word2TextView.text = randomSecond
 

@@ -52,6 +52,9 @@ class NeuroChatFragment : Fragment() {
     private lateinit var drawerContainer: ConstraintLayout
     private lateinit var drawerPanel: View
     private lateinit var drawerOverlay: View
+    private lateinit var comboSaveButton: Button
+
+    private var specialWords: Pair<String, String>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,8 +66,18 @@ class NeuroChatFragment : Fragment() {
             .usePlugin(HtmlPlugin.create())
             .usePlugin(LinkifyPlugin.create())
             .build()
+
+        arguments?.let {
+            val word1 = it.getString("word1", "")
+            val word2 = it.getString("word2", "")
+            if (word1.isNotEmpty() && word2.isNotEmpty()) {
+                specialWords = word1 to word2
+            }
+        }
+
         return binding.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -81,7 +94,7 @@ class NeuroChatFragment : Fragment() {
 
         if (chatHistory.isEmpty()) {
             val roleSelection = profileViewModel.getRoleSelection()
-            val systemPrompt = buildSystemPrompt(roleSelection)
+            val systemPrompt = buildSystemPrompt(roleSelection, specialWords)
             chatHistory.add(Message(role = "system", content = systemPrompt, timestamp = Date().time))
 
             sendInitialPrompt()
@@ -111,6 +124,7 @@ class NeuroChatFragment : Fragment() {
         drawerContainer = binding.root.findViewById(R.id.drawerContainer)
         drawerOverlay = binding.root.findViewById(R.id.drawerOverlay)
         drawerPanel = binding.root.findViewById(R.id.drawerPanel)
+        comboSaveButton = binding.root.findViewById(R.id.ComboSaveButton)
 
         menuButton.setOnClickListener {
             if (isDrawerOpen) {
@@ -135,6 +149,11 @@ class NeuroChatFragment : Fragment() {
 
         binding.ProfileButton.setOnClickListener {
             findNavController().navigate(R.id.action_NeuroChatFragment_to_ProfileFragment)
+            closeDrawer()
+        }
+
+        comboSaveButton.setOnClickListener {
+            sendProgrammaticMessage("Пожалуйста, проанализируй весь наш диалог. Сформулируй основную идею или ключевой результат, к которому мы пришли, в виде одного краткого и емкого предложения. Исключи все второстепенные детали и приветствия.")
             closeDrawer()
         }
     }
@@ -186,7 +205,6 @@ class NeuroChatFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // Попытка инициализации клиента перед использованием
                 DeepSeekApiClient.initialize()
                 val apiService = DeepSeekApiClient.apiService
 
@@ -196,7 +214,7 @@ class NeuroChatFragment : Fragment() {
                         Toast.makeText(requireContext(), "Не удалось инициализировать API клиент.", Toast.LENGTH_LONG).show()
                     }
                     Log.e(TAG, "API client not initialized.")
-                    return@launch // Выходим из корутины
+                    return@launch
                 }
 
                 val response = apiService.createChatCompletion(request)
@@ -231,7 +249,10 @@ class NeuroChatFragment : Fragment() {
         }
     }
 
-    private fun buildSystemPrompt(roleSelection: RoleSelection?): String {
+    private fun buildSystemPrompt(
+        roleSelection: RoleSelection?,
+        words: Pair<String, String>? = null
+    ): String {
         val userInfo = when (roleSelection?.roleType) {
             "student" -> "Ученик (${roleSelection.role}) в сфере ${roleSelection.field}"
             "expert" -> "Эксперт в области ${roleSelection.role}"
@@ -239,17 +260,55 @@ class NeuroChatFragment : Fragment() {
             else -> "Пользователь"
         }
 
-        return """
+        return if (words != null) {
+            """
+            Ты — дружелюбный и креативный помощник в проектной деятельности и Тебя зовут Project Helper.
+            Твоя основная задача — помочь пользователю, который является $userInfo, придумать идею по 2м словам: ${words.first} и ${words.second}.
+
+            Действуй по следующему алгоритму:
+            1. Поприветствуй пользователя и представься как помощник по проектной деятельности
+            2. Кратко объясни, что твоя задача - помочь придумать идею по словам: "${words.first}" и "${words.second}"
+            3. Попроси пользователя рассказать, как эти слова могут быть связаны с его проектом или сферой деятельности
+            4. Когда пользователь опишет свою идею:
+               - Проанализируй предложение
+               - Предложи 3-5 креативных вариантов развития проекта с использованием ОБОИХ слов
+               - Свяжи идеи с контекстом пользователя (его ролью: $userInfo)
+               - Обязательно используй оба слова в каждом предложении
+            5. Будь поддерживающим и поощряй дальнейшее обсуждение
+
+            Важные требования:
+            - Всегда используй оба слова в своих предложениях
+            - Предлагай только релевантные идеи, связанные с проектной деятельностью
+            - Учитывай роль пользователя: $userInfo
+            - Сохраняй дружелюбный и мотивирующий тон
+            - Общайся на русском языке
+
+            Твой первый ответ должен быть приветствием и кратким объяснением задачи.
+            """.trimIndent()
+        } else {
+            """
             Ты — дружелюбный и креативный помощник в проектной деятельности и Тебя зовут Project Helper.
             Твоя основная задача — помочь пользователю, который является $userInfo, создать или развить его проект.
-            Поприветствуй пользователя, представься как помощник по проектной деятельности и вежливо попроси его рассказать о проекте, над которым он работает или который хочет создать.
-            Когда пользователь опишет свой проект, внимательно проанализируй предоставленную информацию, учитывая его роль и сферу деятельности, которую он выбрал ранее.
-            На основе этой информации предложи пользователю конкретные и полезные идеи по развитию или созданию проекта.
-            Идеи должны быть релевантны проекту и учитывать контекст пользователя (его роль).
-            Будь поддерживающим и поощряй дальнейшее обсуждение.
-            Общайся на русском языке.
+
+            Действуй по следующему алгоритму:
+            1. Поприветствуй пользователя и представься
+            2. Вежливо попроси рассказать о проекте, над которым он работает
+            3. Когда пользователь опишет проект:
+               - Внимательно проанализируй информацию
+               - Учти роль пользователя: $userInfo
+               - Предложи конкретные и полезные идеи по развитию проекта
+               - Предложения должны быть практичными и реализуемыми
+            4. Будь поддерживающим и поощряй дальнейшее обсуждение
+
+            Важные требования:
+            - Всегда учитывай роль пользователя: $userInfo
+            - Предлагай только релевантные и полезные идеи
+            - Сохраняй дружелюбный и мотивирующий тон
+            - Общайся на русском языке
+
             Твой первый ответ должен быть приветствием и вопросом о проекте.
-        """.trimIndent()
+            """.trimIndent()
+        }
     }
 
     private fun sendMessage() {
@@ -322,6 +381,72 @@ class NeuroChatFragment : Fragment() {
             }
         }
     }
+
+    private fun sendProgrammaticMessage(messageContent: String) {
+        val userMessage = Message(role = "user", content = messageContent, timestamp = Date().time)
+
+        // Optionally add the programmatic message to the display list,
+        // but typically you just send it to the AI without showing it to the user.
+        // messages.add(userMessage)
+        chatHistory.add(userMessage)
+
+        updateMessageList() // Update to show AI response later
+
+        showTypingIndicator(true)
+
+        val request = ChatCompletionRequest(
+            model = DEEPSEEK_MODEL,
+            messages = chatHistory.toList(), // Send the whole history including the new prompt
+            stream = false
+        )
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                DeepSeekApiClient.initialize()
+                val apiService = DeepSeekApiClient.apiService
+
+                if (apiService == null) {
+                    withContext(Dispatchers.Main) {
+                        showTypingIndicator(false)
+                        Toast.makeText(requireContext(), "Не удалось инициализировать API клиент.", Toast.LENGTH_LONG).show()
+                    }
+                    Log.e(TAG, "API client not initialized.")
+                    return@launch
+                }
+
+                val response = apiService.createChatCompletion(request)
+                Log.d(TAG, "API Response received for programmatic message: $response")
+
+
+                withContext(Dispatchers.Main) {
+                    showTypingIndicator(false)
+
+                    val botMessageContent = response.choices.firstOrNull()?.message?.content
+                    val botMessageRole = response.choices.firstOrNull()?.message?.role
+
+                    if (botMessageRole == "assistant" && !botMessageContent.isNullOrBlank()) {
+                        val botMessage = Message(role = "assistant", content = botMessageContent, timestamp = Date().time)
+                        messages.add(botMessage)
+                        chatHistory.add(botMessage)
+                        updateMessageList()
+                    } else {
+                        val errorDetail = response.choices.firstOrNull()?.finishReason ?: "No content or invalid response"
+                        Toast.makeText(requireContext(), "Не удалось получить ответ от нейросети: $errorDetail", Toast.LENGTH_LONG).show()
+                        Log.e(TAG, "API response for programmatic message had incorrect role or empty content. Role: $botMessageRole, Content: $botMessageContent, Error Detail: $errorDetail")
+                    }
+                }
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Error sending programmatic message to API", e)
+                withContext(Dispatchers.Main) {
+                    showTypingIndicator(false)
+                    val errorMessage = "Ошибка при отправке запроса на компоновку: ${e.localizedMessage ?: e.message ?: "Неизвестная ошибка"}"
+                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
 
     private fun updateMessageList() {
         messageAdapter.submitList(messages.toList()) {
