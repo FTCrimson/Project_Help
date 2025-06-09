@@ -8,7 +8,6 @@
     android:background="@drawable/bg_neuro_gradient"
     android:padding="8dp">
 
-    <!-- Заголовок чата -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -48,7 +47,6 @@
             app:tint="#FFFFFF" />
     </LinearLayout>
 
-    <!-- Контент чата -->
     <TextView
         android:id="@+id/emptyStateTextView"
         android:layout_width="match_parent"
@@ -139,7 +137,6 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Выдвижная панель -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/drawerContainer"
         android:layout_width="match_parent"
@@ -150,7 +147,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Затемнение фона -->
         <View
             android:id="@+id/drawerOverlay"
             android:layout_width="match_parent"
@@ -164,7 +160,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Сама выдвижная панель -->
         <LinearLayout
             android:id="@+id/drawerPanel"
             android:layout_width="280dp"
@@ -177,7 +172,6 @@
             app:layout_constraintStart_toStartOf="parent"
             android:translationX="-280dp">
 
-            <!-- Добавим раздел управления чатом -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -202,7 +196,6 @@
                 android:drawableStart="@drawable/ic_edit"
                 style="@style/TextAppearance.AppCompat.Widget.Button"/>
 
-            <!-- Добавленные кнопки для этапов -->
             <Button
                 android:id="@+id/stage2Button"
                 android:layout_width="match_parent"
@@ -237,8 +230,6 @@
                 android:layout_height="1dp"
                 android:background="#454059"
                 android:layout_marginVertical="8dp"/>
-
-            <!-- Кнопки для этапа 2 (изначально скрыты) -->
 
             <Button
                 android:id="@+id/stage3Button"

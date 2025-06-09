@@ -115,7 +115,6 @@
             android:indeterminate="true"/>
     </LinearLayout>
 
-    <!-- КОНТЕЙНЕР ПАНЕЛИ ПЕРЕМЕЩЕН В КОНЕЦ ДЛЯ ПРАВИЛЬНОГО Z-ИНДЕКСА -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/drawerContainer"
             android:layout_width="match_parent"
@@ -126,7 +125,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Затемнение фона -->
         <View
             android:id="@+id/drawerOverlay"
             android:layout_width="match_parent"
@@ -140,7 +138,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Сама выдвижная панель -->
         <LinearLayout
             android:id="@+id/drawerPanel"
             android:layout_width="280dp"

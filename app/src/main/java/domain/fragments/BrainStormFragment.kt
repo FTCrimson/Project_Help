@@ -29,7 +29,6 @@ class BrainStormFragment : Fragment() {
         }
 
         view.findViewById<View>(R.id.buttonCombinations).setOnClickListener {
-            // Переход на CombinationsFragment
             findNavController().navigate(R.id.action_BrainStormFragment_to_CombinationsFragment)
         }
     }

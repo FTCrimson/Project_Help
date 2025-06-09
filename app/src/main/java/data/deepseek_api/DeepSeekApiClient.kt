@@ -25,7 +25,6 @@ object DeepSeekApiClient {
 
         if (deepseekApiKey == null) {
             println("Не удалось получить API ключ из Firestore.")
-            // Возможно, здесь нужно выбросить исключение или предпринять другие действия
             return
         }
 

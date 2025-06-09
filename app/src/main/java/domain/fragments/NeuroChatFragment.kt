@@ -385,18 +385,15 @@ class NeuroChatFragment : Fragment() {
     private fun sendProgrammaticMessage(messageContent: String) {
         val userMessage = Message(role = "user", content = messageContent, timestamp = Date().time)
 
-        // Optionally add the programmatic message to the display list,
-        // but typically you just send it to the AI without showing it to the user.
-        // messages.add(userMessage)
         chatHistory.add(userMessage)
 
-        updateMessageList() // Update to show AI response later
+        updateMessageList()
 
         showTypingIndicator(true)
 
         val request = ChatCompletionRequest(
             model = DEEPSEEK_MODEL,
-            messages = chatHistory.toList(), // Send the whole history including the new prompt
+            messages = chatHistory.toList(),
             stream = false
         )
 
