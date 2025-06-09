@@ -301,8 +301,6 @@ class ChatFragment : Fragment() {
                 binding.chatTitle.text = "Чат не найден"
                 showAccessDeniedView("Чат не найден")
             }
-            // chatInfo обновляется из Firestore, что триггерит stage и approvals LiveData
-            // их наблюдатели уже настроены ниже
         }
 
         viewModel.addMemberResult.observe(viewLifecycleOwner) { result ->
@@ -341,7 +339,6 @@ class ChatFragment : Fragment() {
             }
         }
 
-        // Наблюдение за этапом для управления видимостью кнопок И навигации
         viewModel.stage.observe(viewLifecycleOwner) { stage ->
             if (_binding == null) return@observe
 
@@ -359,7 +356,6 @@ class ChatFragment : Fragment() {
                     binding.stage3Button.visibility = View.VISIBLE
                     binding.approveProblemButton.visibility = View.VISIBLE
                     binding.Info2.visibility = View.VISIBLE
-                    // Навигация на InfoFragment2 ПЕРЕМЕЩЕНА в обработчик нажатия stage2Button
                 }
                 3 -> {
                     binding.stage2Button.visibility = View.GONE
@@ -367,10 +363,6 @@ class ChatFragment : Fragment() {
                     binding.stage3Button.visibility = View.VISIBLE
                     binding.approveProblemButton.visibility = View.VISIBLE
                     binding.Info2.visibility = View.VISIBLE
-                    // TODO: Навигация на InfoFragment3 при переходе на Stage 3 (если нужно)
-                    // if (findNavController().currentDestination?.id == R.id.ChatFragment) {
-                    //     findNavController().navigate(R.id.action_ChatFragment_to_InfoFragment3)
-                    // }
                 }
                 else -> {
                     binding.stage2Button.visibility = View.GONE
@@ -382,11 +374,10 @@ class ChatFragment : Fragment() {
             }
         }
 
-        // Наблюдение за подтверждениями этапа 1 для управления активностью кнопки Stage 2
         viewModel.approvalsStage1.observe(viewLifecycleOwner) { approvals ->
             if (_binding == null) return@observe
 
-            val currentChat = viewModel.chatInfo.value // Используем chatInfo из ViewModel
+            val currentChat = viewModel.chatInfo.value
             val currentStage = currentChat?.currentStage ?: 1
 
             if (currentStage == 1 && currentChat != null) {
@@ -401,11 +392,10 @@ class ChatFragment : Fragment() {
             }
         }
 
-        // Наблюдение за подтверждениями этапа 2 для управления активностью кнопки Stage 3
         viewModel.approvalsStage2.observe(viewLifecycleOwner) { approvals ->
             if (_binding == null) return@observe
 
-            val currentChat = viewModel.chatInfo.value // Используем chatInfo из ViewModel
+            val currentChat = viewModel.chatInfo.value
             val currentStage = currentChat?.currentStage ?: 1
 
             if (currentStage == 2 && currentChat != null) {

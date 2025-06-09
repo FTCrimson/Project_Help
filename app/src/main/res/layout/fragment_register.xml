@@ -8,7 +8,7 @@
     android:background="@color/white"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="features.auth.fragments.RegisterFragment">
+    tools:context="domain.fragments.RegisterFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
