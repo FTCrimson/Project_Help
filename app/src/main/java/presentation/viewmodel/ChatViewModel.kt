@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.map
 import com.example.project_helper.data.repository.ChatRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -15,7 +16,9 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import java.util.Date
 
-class ChatViewModel(private val chatRepository: ChatRepository) : ViewModel() {
+class ChatViewModel(
+    private val chatRepository: ChatRepository
+) : ViewModel() {
 
     private val auth = FirebaseAuth.getInstance()
     private val currentUserId: String
@@ -35,6 +38,10 @@ class ChatViewModel(private val chatRepository: ChatRepository) : ViewModel() {
 
     private val _updateChatNameResult = MutableLiveData<Result<Unit>?>()
     val updateChatNameResult: LiveData<Result<Unit>?> = _updateChatNameResult
+
+    val stage: LiveData<Int> = chatInfo.map { it?.currentStage ?: 1 }
+    val approvalsStage1: LiveData<Map<String, Boolean>> = chatInfo.map { it?.stage1Approvals ?: emptyMap() }
+    val approvalsStage2: LiveData<Map<String, Boolean>> = chatInfo.map { it?.stage2Approvals ?: emptyMap() }
 
     private var chatId: String = ""
 
@@ -107,8 +114,6 @@ class ChatViewModel(private val chatRepository: ChatRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 chatRepository.sendMessage(chatId, message)
-                // Optional: Update last message timestamp
-                // chatRepository.updateChatLastMessageTimestamp(chatId, Date())
             } catch (e: Exception) {
                 handleFirestoreError(e)
             }
@@ -154,6 +159,109 @@ class ChatViewModel(private val chatRepository: ChatRepository) : ViewModel() {
         }
     }
 
+    fun approveIdea() {
+        val userId = currentUserId
+        val currentChat = _chatInfo.value
+        val currentStage = currentChat?.currentStage ?: 1
+        val currentApprovals = currentChat?.stage1Approvals ?: emptyMap()
+
+        if (userId.isEmpty() || chatId.isEmpty() || currentChat == null) return
+
+        if (currentStage == 1 && currentApprovals[userId] != true) {
+            viewModelScope.launch {
+                try {
+                    chatRepository.saveApprovalStage1(chatId, userId)
+                } catch (e: Exception) {
+                    _error.value = "Ошибка при одобрении идеи: ${e.message}"
+                }
+            }
+        }
+    }
+
+    fun approveProblem() {
+        val userId = currentUserId
+        val currentChat = _chatInfo.value
+        val currentStage = currentChat?.currentStage ?: 1
+        val currentApprovals = currentChat?.stage2Approvals ?: emptyMap()
+
+        if (userId.isEmpty() || chatId.isEmpty() || currentChat == null) return
+
+        if (currentStage == 2 && currentApprovals[userId] != true) {
+            viewModelScope.launch {
+                try {
+                    chatRepository.saveApprovalStage2(chatId, userId)
+                } catch (e: Exception) {
+                    _error.value = "Ошибка при одобрении проблематики: ${e.message}"
+                }
+            }
+        }
+    }
+
+    fun moveToStage2() {
+        val currentChat = _chatInfo.value
+        val currentStage = currentChat?.currentStage ?: 1
+        val currentApprovals = currentChat?.stage1Approvals ?: emptyMap()
+
+        if (chatId.isEmpty() || currentChat == null || currentStage != 1) return
+
+        val allApproved = currentChat.members.all { memberId ->
+            currentApprovals[memberId] == true
+        }
+
+        if (allApproved) {
+            viewModelScope.launch {
+                try {
+                    chatRepository.updateChatStage(chatId, 2)
+                    chatRepository.resetApprovalsStage1(chatId)
+                } catch (e: Exception) {
+                    _error.value = "Ошибка при переходе на этап 2: ${e.message}"
+                }
+            }
+        } else {
+            _error.value = "Не все участники одобрили идею"
+        }
+    }
+
+    fun moveToStage3() {
+        val currentChat = _chatInfo.value
+        val currentStage = currentChat?.currentStage ?: 1
+        val currentApprovals = currentChat?.stage2Approvals ?: emptyMap()
+
+        if (chatId.isEmpty() || currentChat == null || currentStage != 2) return
+
+        val allApproved = currentChat.members.all { memberId ->
+            currentApprovals[memberId] == true
+        }
+
+        if (allApproved) {
+            viewModelScope.launch {
+                try {
+                    chatRepository.updateChatStage(chatId, 3)
+                    chatRepository.resetApprovalsStage2(chatId)
+                } catch (e: Exception) {
+                    _error.value = "Ошибка при переходе на этап 3: ${e.message}"
+                }
+            }
+        } else {
+            _error.value = "Не все участники одобрили проблематику"
+        }
+    }
+
+    fun isAllApprovedForStage1(): Boolean {
+        val chat = _chatInfo.value
+        val approvalsMap = chat?.stage1Approvals ?: emptyMap()
+        return chat?.members?.all { memberId ->
+            approvalsMap[memberId] == true
+        } ?: false
+    }
+
+    fun isAllApprovedForStage2(): Boolean {
+        val chat = _chatInfo.value
+        val approvalsMap = chat?.stage2Approvals ?: emptyMap()
+        return chat?.members?.all { memberId ->
+            approvalsMap[memberId] == true
+        } ?: false
+    }
 
     private fun handleFirestoreError(exception: Exception) {
         when (exception) {
@@ -186,4 +294,3 @@ class ChatViewModel(private val chatRepository: ChatRepository) : ViewModel() {
         return chat != null && chat.members.contains(currentUserId)
     }
 }
-

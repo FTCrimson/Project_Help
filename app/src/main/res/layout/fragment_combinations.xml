@@ -83,16 +83,10 @@
         app:layout_constraintTop_toBottomOf="@id/wordsCard" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="275dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Brainstorm (Combinations) — это креативная игра, в которой участникам даются два случайных слова. Задача — придумать оригинальную идею проекта, объединяющую оба понятия.
- Как играть:
- Получаешь 2 случайных слова (например, кофе и космос).
- Придумывашь проект на их основе (например, Кофейня в невесомости для астронавтов).
- Можно играть одному или в группе, соревнуясь в креативности.
- Цель: развить воображение, найти неожиданные связи и просто весело провести время!
- Подходит для мозговых штурмов, уроков креатива или разминки перед работой. "
+        android:layout_marginTop="52dp"
+        android:text="Brainstorm (Combinations): игра на креатив. Получи 2 случайных слова, придумай проект, объединяющий их (пр. Кофе + Космос = Кофейня в невесомости). Цель: развить воображение, найти связи, весело провести время."
         android:textColor="@color/white"
         tools:ignore="MissingConstraints"
         android:textSize="12sp"

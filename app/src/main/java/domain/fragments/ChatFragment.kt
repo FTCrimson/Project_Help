@@ -10,6 +10,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.project_helper.R
@@ -17,7 +20,6 @@ import com.example.project_helper.data.repository.ChatRepository
 import com.example.project_helper.databinding.FragmentChatBinding
 import com.example.project_helper.domain.commandchat.ChatMessageAdapter
 import com.example.project_helper.presentation.viewmodel.commandchat.ChatViewModel
-import com.example.project_helper.presentation.viewmodel.commandchat.ChatViewModelFactory
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 
@@ -27,7 +29,15 @@ class ChatFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: ChatViewModel by viewModels {
-        ChatViewModelFactory(ChatRepository())
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                if (modelClass.isAssignableFrom(ChatViewModel::class.java)) {
+                    @Suppress("UNCHECKED_CAST")
+                    return ChatViewModel(ChatRepository()) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
+            }
+        }
     }
     private lateinit var messageAdapter: ChatMessageAdapter
 
@@ -54,9 +64,7 @@ class ChatFragment : Fragment() {
             return
         }
 
-        // Передаем ID чата во ViewModel
         viewModel.setChatId(chatId)
-
         setupRecyclerView()
         setupClickListeners()
         setupDrawerAnimations()
@@ -64,7 +72,6 @@ class ChatFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        // Получаем текущего пользователя из FirebaseAuth
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         messageAdapter = ChatMessageAdapter(currentUserId)
 
@@ -77,11 +84,8 @@ class ChatFragment : Fragment() {
     }
 
     private fun setupDrawerAnimations() {
-        // Добавляем проверку на _binding на случай, если метод вызывается после onDestroyView
         if (_binding == null) return
-
-        // Ширина панели (используйте dimension resource, если есть)
-        val drawerWidth = 280f // или resources.getDimension(R.dimen.drawer_width)
+        val drawerWidth = 280f
 
         drawerSlideIn = ObjectAnimator.ofFloat(
             binding.drawerPanel,
@@ -121,57 +125,62 @@ class ChatFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        // Добавляем проверку на _binding
         if (_binding == null) return
 
-        binding.sendButton.setOnClickListener {
-            sendMessage()
-        }
-
-        binding.addMemberButton.setOnClickListener {
-            showAddMemberDialog()
-        }
-
-        binding.requestAccessButton.setOnClickListener {
-            requestAccessToChat()
-        }
-
-        binding.menuButton.setOnClickListener {
-            openDrawer()
-        }
+        binding.sendButton.setOnClickListener { sendMessage() }
+        binding.addMemberButton.setOnClickListener { showAddMemberDialog() }
+        binding.requestAccessButton.setOnClickListener { requestAccessToChat() }
+        binding.menuButton.setOnClickListener { openDrawer() }
 
         binding.aiChatButton.setOnClickListener {
-            // Проверяем на null перед использованием findNavController
             findNavController().navigate(R.id.action_ChatFragment_to_NeuroChatFragment)
             closeDrawer()
         }
 
         binding.commandChatButton.setOnClickListener {
-            // Проверяем на null перед использованием findNavController
             findNavController().navigate(R.id.action_ChatFragment_to_CommandChatFragment)
             closeDrawer()
         }
 
         binding.ProfileButton.setOnClickListener {
-            // Проверяем на null перед использованием findNavController
             findNavController().navigate(R.id.action_ChatFragment_to_ProfileFragment)
             closeDrawer()
         }
 
-        // Новая кнопка изменения названия в выдвижной панели
-        binding.btnEditChatName.setOnClickListener {
-            showEditChatNameDialog()
-            closeDrawer() // Закрываем панель после выбора действия
-        }
-
-        binding.drawerOverlay.setOnClickListener {
+        binding.Info2.setOnClickListener {
+            viewModel.moveToStage3()
+            closeDrawer()
+            findNavController().navigate(R.id.action_ChatFragment_to_InfoFragment2)
             closeDrawer()
         }
 
-        // Опционально: клик по заголовку тоже может открывать диалог изменения названия
-        // binding.chatTitle.setOnClickListener {
-        //     showEditChatNameDialog()
-        // }
+        binding.btnEditChatName.setOnClickListener {
+            showEditChatNameDialog()
+            closeDrawer()
+        }
+
+        binding.drawerOverlay.setOnClickListener { closeDrawer() }
+
+        binding.approveIdeaButton.setOnClickListener {
+            viewModel.approveIdea()
+            closeDrawer()
+        }
+
+        binding.stage2Button.setOnClickListener {
+            viewModel.moveToStage2()
+            closeDrawer()
+            findNavController().navigate(R.id.action_ChatFragment_to_InfoFragment2)
+        }
+
+        binding.approveProblemButton.setOnClickListener {
+            viewModel.approveProblem()
+            closeDrawer()
+        }
+
+        binding.stage3Button.setOnClickListener {
+            viewModel.moveToStage3()
+            closeDrawer()
+        }
     }
 
     private fun openDrawer() {
@@ -186,15 +195,9 @@ class ChatFragment : Fragment() {
         drawerSlideOut.start()
         overlayFadeOut.start()
 
-        // Добавляем проверку на _binding внутри слушателя
         drawerSlideOut.addUpdateListener {
             if (_binding != null && it.animatedFraction == 1f) {
                 binding.drawerContainer.visibility = View.GONE
-            }
-        }
-        overlayFadeOut.addUpdateListener {
-            if (_binding != null && it.animatedFraction == 1f) {
-                // Действия после завершения анимации затемнения, если нужны
             }
         }
     }
@@ -212,7 +215,6 @@ class ChatFragment : Fragment() {
             .setPositiveButton("Добавить") { _, _ ->
                 val username = usernameInput.text.toString().trim()
                 if (username.isNotEmpty()) {
-                    // Вызываем метод ViewModel, который уже знает chatId
                     viewModel.addMemberToChat(username)
                 } else {
                     Toast.makeText(requireContext(), "Введите username", Toast.LENGTH_SHORT).show()
@@ -222,14 +224,14 @@ class ChatFragment : Fragment() {
             .show()
     }
 
-    // Диалог для изменения названия чата
+
     private fun showEditChatNameDialog() {
         if (_binding == null) return
 
         val currentName = binding.chatTitle.text.toString()
         val dialogView = LayoutInflater.from(requireContext())
-            .inflate(R.layout.dialog_edit_chat_name, null) // Используем правильный layout
-        val nameInput = dialogView.findViewById<TextInputEditText>(R.id.chatNameInput) // Используем правильный ID
+            .inflate(R.layout.dialog_edit_chat_name, null)
+        val nameInput = dialogView.findViewById<TextInputEditText>(R.id.chatNameInput)
         nameInput.setText(currentName)
 
         AlertDialog.Builder(requireContext())
@@ -238,7 +240,6 @@ class ChatFragment : Fragment() {
             .setPositiveButton("Сохранить") { _, _ ->
                 val newName = nameInput.text.toString().trim()
                 if (newName.isNotEmpty()) {
-                    // Вызываем метод ViewModel, который уже знает chatId
                     viewModel.updateChatName(newName)
                 } else {
                     Toast.makeText(requireContext(), "Введите название", Toast.LENGTH_SHORT).show()
@@ -249,7 +250,6 @@ class ChatFragment : Fragment() {
     }
 
     private fun requestAccessToChat() {
-        // Логика запроса доступа. Возможно, нужно будет вызвать метод в ViewModel
         Toast.makeText(requireContext(), "Запрос доступа отправлен создателю чата", Toast.LENGTH_SHORT).show()
     }
 
@@ -288,25 +288,21 @@ class ChatFragment : Fragment() {
 
             if (chat != null) {
                 binding.chatTitle.text = chat.name
-                // Обновляем видимость кнопок в зависимости от прав пользователя
                 binding.addMemberButton.visibility = if (viewModel.canEditChat(chat)) View.VISIBLE else View.GONE
                 binding.btnEditChatName.visibility = if (viewModel.canEditChat(chat)) View.VISIBLE else View.GONE
 
-                // Если пользователь не участник, показываем экран "Нет доступа"
                 if (!viewModel.isCurrentUserMember(chat)) {
                     showAccessDeniedView("Нет доступа к чату")
                 } else {
-                    // Если пользователь участник, убеждаемся, что контент чата виден
                     binding.accessDeniedView.visibility = View.GONE
                     binding.inputLayout.visibility = View.VISIBLE
-                    // Состояние emptyStateTextView и messagesRecyclerView управляется messages Observer
                 }
-
             } else {
-                // Если чат == null (не найден), показываем ошибку или пустой экран
                 binding.chatTitle.text = "Чат не найден"
                 showAccessDeniedView("Чат не найден")
             }
+            // chatInfo обновляется из Firestore, что триггерит stage и approvals LiveData
+            // их наблюдатели уже настроены ниже
         }
 
         viewModel.addMemberResult.observe(viewLifecycleOwner) { result ->
@@ -334,7 +330,6 @@ class ChatFragment : Fragment() {
             result?.let {
                 if (it.isSuccess) {
                     Toast.makeText(requireContext(), "Название чата обновлено", Toast.LENGTH_SHORT).show()
-                    // Название в chatTitle обновится автоматически через observer chatInfo
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -343,6 +338,85 @@ class ChatFragment : Fragment() {
                     ).show()
                 }
                 viewModel.resetUpdateChatNameResult()
+            }
+        }
+
+        // Наблюдение за этапом для управления видимостью кнопок И навигации
+        viewModel.stage.observe(viewLifecycleOwner) { stage ->
+            if (_binding == null) return@observe
+
+            when (stage) {
+                1 -> {
+                    binding.stage2Button.visibility = View.VISIBLE
+                    binding.approveIdeaButton.visibility = View.VISIBLE
+                    binding.stage3Button.visibility = View.GONE
+                    binding.approveProblemButton.visibility = View.GONE
+                    binding.Info2.visibility = View.GONE
+                }
+                2 -> {
+                    binding.stage2Button.visibility = View.GONE
+                    binding.approveIdeaButton.visibility = View.GONE
+                    binding.stage3Button.visibility = View.VISIBLE
+                    binding.approveProblemButton.visibility = View.VISIBLE
+                    binding.Info2.visibility = View.VISIBLE
+                    // Навигация на InfoFragment2 ПЕРЕМЕЩЕНА в обработчик нажатия stage2Button
+                }
+                3 -> {
+                    binding.stage2Button.visibility = View.GONE
+                    binding.approveIdeaButton.visibility = View.GONE
+                    binding.stage3Button.visibility = View.VISIBLE
+                    binding.approveProblemButton.visibility = View.VISIBLE
+                    binding.Info2.visibility = View.VISIBLE
+                    // TODO: Навигация на InfoFragment3 при переходе на Stage 3 (если нужно)
+                    // if (findNavController().currentDestination?.id == R.id.ChatFragment) {
+                    //     findNavController().navigate(R.id.action_ChatFragment_to_InfoFragment3)
+                    // }
+                }
+                else -> {
+                    binding.stage2Button.visibility = View.GONE
+                    binding.approveIdeaButton.visibility = View.GONE
+                    binding.stage3Button.visibility = View.GONE
+                    binding.approveProblemButton.visibility = View.GONE
+                    binding.Info2.visibility = View.GONE
+                }
+            }
+        }
+
+        // Наблюдение за подтверждениями этапа 1 для управления активностью кнопки Stage 2
+        viewModel.approvalsStage1.observe(viewLifecycleOwner) { approvals ->
+            if (_binding == null) return@observe
+
+            val currentChat = viewModel.chatInfo.value // Используем chatInfo из ViewModel
+            val currentStage = currentChat?.currentStage ?: 1
+
+            if (currentStage == 1 && currentChat != null) {
+                binding.stage2Button.isEnabled = currentChat.members.all { memberId ->
+                    approvals[memberId] == true
+                }
+
+                val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+                if (currentUserId.isNotEmpty()) {
+                    binding.approveIdeaButton.isEnabled = approvals[currentUserId] != true
+                }
+            }
+        }
+
+        // Наблюдение за подтверждениями этапа 2 для управления активностью кнопки Stage 3
+        viewModel.approvalsStage2.observe(viewLifecycleOwner) { approvals ->
+            if (_binding == null) return@observe
+
+            val currentChat = viewModel.chatInfo.value // Используем chatInfo из ViewModel
+            val currentStage = currentChat?.currentStage ?: 1
+
+            if (currentStage == 2 && currentChat != null) {
+                binding.stage3Button.isEnabled = currentChat.members.all { memberId ->
+                    approvals[memberId] == true
+                }
+
+                val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+                if (currentUserId.isNotEmpty()) {
+                    binding.approveProblemButton.isEnabled = approvals[currentUserId] != true
+                }
             }
         }
     }
@@ -368,14 +442,12 @@ class ChatFragment : Fragment() {
             return
         }
 
-        // Вызываем метод ViewModel, который отправит сообщение
         viewModel.sendMessage(text)
         binding.messageInput.text?.clear()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // Отменяем анимации, чтобы их слушатели не срабатывали на null-binding
         if (::drawerSlideOut.isInitialized) drawerSlideOut.cancel()
         if (::overlayFadeOut.isInitialized) overlayFadeOut.cancel()
         _binding = null

@@ -8,7 +8,7 @@
     android:background="@color/white"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="features.auth.fragments.LoginFragment">
+    tools:context="com.example.project_helper.domain.fragments.LoginFragment">
 
     <TextView
         android:layout_width="168dp"
@@ -65,6 +65,8 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/black"
         android:text="@string/Log_in_button"
+        android:background="@drawable/btn_neon_purple"
+        app:backgroundTint="@color/purple_500"
         android:textColor="@color/white"
         android:textSize="14dp"
         app:cornerRadius="14dp" />

@@ -90,6 +90,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/black"
+        android:background="@drawable/btn_neon_purple"
+        app:backgroundTint="@color/purple_500"
         android:text="Далее"
         app:cornerRadius="8dp"
         app:iconGravity="start"

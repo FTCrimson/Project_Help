@@ -103,5 +103,25 @@ class ChatRepository {
             null
         }
     }
+
+    suspend fun updateChatStage(chatId: String, newStage: Int) {
+        chatsCollection.document(chatId).update("currentStage", newStage).await()
+    }
+
+    suspend fun saveApprovalStage1(chatId: String, userId: String) {
+        chatsCollection.document(chatId).update("stage1Approvals.$userId", true).await()
+    }
+
+    suspend fun saveApprovalStage2(chatId: String, userId: String) {
+        chatsCollection.document(chatId).update("stage2Approvals.$userId", true).await()
+    }
+
+    suspend fun resetApprovalsStage1(chatId: String) {
+        chatsCollection.document(chatId).update("stage1Approvals", emptyMap<String, Boolean>()).await()
+    }
+
+    suspend fun resetApprovalsStage2(chatId: String) {
+        chatsCollection.document(chatId).update("stage2Approvals", emptyMap<String, Boolean>()).await()
+    }
 }
 

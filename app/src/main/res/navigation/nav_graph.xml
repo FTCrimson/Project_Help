@@ -161,6 +161,14 @@
             android:id="@+id/action_ChatFragment_to_ProfileFragment"
             app:destination="@id/profileFragment" />
 
+        <action
+            android:id="@+id/action_ChatFragment_to_InfoFragment"
+            app:destination="@id/InfoFragment" />
+
+        <action
+            android:id="@+id/action_ChatFragment_to_InfoFragment2"
+            app:destination="@id/InfoFragment2" />
+
     </fragment>
 
     <fragment
@@ -177,5 +185,10 @@
             app:destination="@id/NeuroChatFragment" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/InfoFragment2"
+        android:name="com.example.project_helper.domain.fragments.InfoFragment2"
+        android:label="InfoFragment2"/>
 
 </navigation>
